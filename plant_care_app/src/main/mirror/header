@@ -1,0 +1,6 @@
+#Automatically generated header file. Editing this file may cause problems.
+#Sun Jan 05 17:05:27 CET 2014
+dexState=NONE
+package=com.platncare.app
+version=40
+appTheme=@style/AppTheme
