@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res" >
+            <file
+                name="ic_drawer"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-hdpi/ic_drawer.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-hdpi/ic_launcher.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="placeholder"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-hdpi/placeholder.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="ic_drawer"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-xxhdpi/ic_drawer.png"
+                qualifiers="xxhdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-xxhdpi/ic_launcher.png"
+                qualifiers="xxhdpi"
+                type="drawable" />
+            <file
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/values/strings_activity_login.xml"
+                qualifiers="" >
+                <string name="error_field_required" >This field is required
+                </string>
+                <string name="error_invalid_email" >This email address is invalid
+                </string>
+                <string name="action_sign_in_twitter" >Twitter
+                </string>
+                <string name="login_progress_signing_in" >Signing in…
+                </string>
+                <string name="action_sign_in_google" >Sign in with Google
+                </string>
+                <string name="action_sign_in_register" ><b>
+Sign in
+                    </b> or register
+                </string>
+                <string name="prompt_email" >Email
+                </string>
+                <string name="action_sign_in_short" >Sign in
+                </string>
+                <string name="prompt_password" >Password
+                </string>
+                <string name="error_incorrect_password" >This password is incorrect
+                </string>
+                <string name="action_forgot_password" >Recover lost password
+                </string>
+                <string name="title_activity_login" >Sign in
+                </string>
+                <string name="error_invalid_password" >This password is too short
+                </string>
+                <string name="action_sign_in_facebook" >Facebook
+                </string>
+            </file>
+            <file
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/values/dimens.xml"
+                qualifiers="" >
+                <dimen name="navigation_drawer_width" >240dp
+                </dimen>
+                <dimen name="activity_horizontal_margin" >16dp
+                </dimen>
+                <dimen name="activity_vertical_margin" >16dp
+                </dimen>
+                <dimen name="item_inside_horizontal_margin" >8dp
+                </dimen>
+            </file>
+            <file
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/values/styles.xml"
+                qualifiers="" >
+
+                <style name="LoginFormContainer" >
+                    <item name="android:layout_width">
+match_parent
+                    </item>
+                    <item name="android:layout_height">
+wrap_content
+                    </item>
+                    <item name="android:padding">
+16dp
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme"
+                    parent="android:Theme.Holo.Light.DarkActionBar" >
+
+                    <!-- Customize your theme here. -->
+                </style>
+            </file>
+            <file
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/values/strings.xml"
+                qualifiers="" >
+                <string name="app_name" >Plant Care
+                </string>
+            </file>
+            <file
+                name="activity_feed"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/layout/activity_feed.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="activity_plant_details"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/layout/activity_plant_details.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="fragment_plant_details"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/layout/fragment_plant_details.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="activity_login"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/layout/activity_login.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="fragment_feed"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/layout/fragment_feed.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="adapter_plant"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/layout/adapter_plant.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/values-large/styles.xml"
+                qualifiers="large" >
+
+                <style name="LoginFormContainer" >
+                    <item name="android:layout_width">
+400dp
+                    </item>
+                    <item name="android:layout_height">
+wrap_content
+                    </item>
+                    <item name="android:layout_gravity">
+center
+                    </item>
+                    <item name="android:padding">
+16dp
+                    </item>
+                </style>
+            </file>
+            <file
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/values-w820dp/dimens.xml"
+                qualifiers="w820dp" >
+                <dimen name="activity_horizontal_margin" >64dp
+                </dimen>
+            </file>
+            <file
+                name="ic_drawer"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-mdpi/ic_drawer.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-mdpi/ic_launcher.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="ic_drawer"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-xhdpi/ic_drawer.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/main/res/drawable-xhdpi/ic_launcher.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+        </source>
+        <source path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/build/res/rs/debug" />
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="/media/paddy/DATA/workspace/plant_care_app/plant_care_app/src/debug/res" />
+    </dataSet>
+
+</merger>
