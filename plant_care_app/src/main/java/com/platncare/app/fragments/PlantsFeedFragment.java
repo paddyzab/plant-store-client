@@ -2,37 +2,42 @@ package com.platncare.app.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import client.endpoint.PlantEndpoint;
+import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.activities.PlantDetailsActivity;
 import com.platncare.app.adapters.PlantAdapter;
-import com.platncare.app.models.Plant;
 import com.platncare.app.views.EndlessListView;
+import model.Plant;
+import model.Token;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlantsFeedFragment extends Fragment implements OnItemClickListener {
 
-    /*TODO:
-    * 1. implement hasMore and loadMore Listeners after backend service will be connected
-    * */
-
     private static final String LOG_TAG = PlantsFeedFragment.class.getSimpleName();
-    private EndlessListView endlessListViewPlants;
-    private ArrayList<Plant> plants;
-    private PlantAdapter plantsAdapter;
-    private static final String PLANTS_KEY = "plants";
-    private static final String PLANT_KEY = "plant";
 
-    public static PlantsFeedFragment newInstance(ArrayList<Plant> plants) {
+    private EndlessListView endlessListViewPlants;
+    private ArrayList<Plant> plants = new ArrayList<Plant>();
+    private PlantAdapter plantsAdapter;
+    private PlantsTask plantsTask;
+    private static final String TOKEN_KEY = "token";
+    private static final String PLANT_KEY = "plant";
+    private Token token;
+
+    public static PlantsFeedFragment newInstance(Token token) {
         PlantsFeedFragment fragment = new PlantsFeedFragment();
         Bundle args = new Bundle();
-        args.putSerializable(PLANTS_KEY, plants);
+        args.putSerializable(TOKEN_KEY, token);
 
         fragment.setArguments(args);
         return fragment;
@@ -45,18 +50,18 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         readExtras();
 
         endlessListViewPlants = (EndlessListView) rootView.findViewById(R.id.endlessListViewPlants);
-
-        plantsAdapter = new PlantAdapter(getActivity(), plants);
         endlessListViewPlants.setAdapter(plantsAdapter);
         endlessListViewPlants.setOnItemClickListener(this);
+
+        plantsTask = new PlantsTask();
+        plantsTask.execute((Void) null);
 
         return rootView;
     }
 
     private void readExtras() {
         Bundle args = getArguments();
-        plants = (ArrayList<Plant>) args.getSerializable(PLANTS_KEY);
-
+        token = (Token) args.getSerializable(TOKEN_KEY);
     }
 
     @Override
@@ -64,5 +69,41 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         Intent intent = new Intent(getActivity(), PlantDetailsActivity.class);
         intent.putExtra(PLANT_KEY, plantsAdapter.getItem(position));
         startActivity(intent);
+    }
+
+    public class PlantsTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            requestPlants(token);
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+
+            plantsTask = null;
+
+            if(success) {
+                showProgress(false);
+                plantsAdapter = new PlantAdapter(getActivity(), plants);
+                endlessListViewPlants.setAdapter(plantsAdapter);
+            }
+        }
+    }
+
+    private void showProgress(boolean show) {
+        endlessListViewPlants.setLoading(show);
+    }
+
+    private void requestPlants(Token token) {
+
+        try {
+            plants = new PlantEndpoint().list(token.getToken());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HTTPClientException e) {
+            e.printStackTrace();
+        }
     }
 }

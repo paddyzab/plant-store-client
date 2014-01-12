@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantDetailsFragment;
-import com.platncare.app.models.Plant;
 import com.platncare.app.utils.FragmentUtils;
+import model.Plant;
 
 public class PlantDetailsActivity extends Activity {
 
@@ -42,7 +42,7 @@ public class PlantDetailsActivity extends Activity {
     private void initActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(plant.getPlantName());
+        actionBar.setTitle(plant.getName());
     }
 
     private void initFragments() {

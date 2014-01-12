@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.platncare.app.R;
-import com.platncare.app.models.Plant;
+import model.Plant;
 
 public class PlantDetailsFragment extends Fragment {
 
@@ -40,7 +40,6 @@ public class PlantDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_plant_details, container, false);
 
-        //TODO obviously we're missing some icons here
         frameLayoutWatering = (FrameLayout) rootView.findViewById(R.id.frameLayoutWatering);
         frameLayoutSun = (FrameLayout) rootView.findViewById(R.id.frameLayoutSun);
         frameLayoutFertiliser = (FrameLayout) rootView.findViewById(R.id.frameLayoutFertiliser);

@@ -33,7 +33,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     private static final String LOG_TAG = LoginActivity.class.getSimpleName();
 
-    private UserLoginTask mAuthTask = null;
+    private UserLoginTask authTask = null;
 
     // Values for email and password at the time of the login attempt.
     private String email;
@@ -111,7 +111,7 @@ public class LoginActivity extends Activity implements OnClickListener {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        if (mAuthTask != null) {
+        if (authTask != null) {
             return;
         }
 
@@ -161,8 +161,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 
 
-            mAuthTask = new UserLoginTask();
-            mAuthTask.execute((Void) null);
+            authTask = new UserLoginTask();
+            authTask.execute((Void) null);
         }
     }
 
@@ -246,7 +246,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
+            authTask = null;
             showProgress(false);
 
             if (success) {
@@ -259,7 +259,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
+            authTask = null;
             showProgress(false);
         }
     }

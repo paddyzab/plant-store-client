@@ -8,8 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.platncare.app.R;
-import com.platncare.app.models.Plant;
-import com.squareup.picasso.Picasso;
+import model.Plant;
 
 import java.util.ArrayList;
 
@@ -39,10 +38,7 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
         }
 
         PlantHolder holder = (PlantHolder) rowView.getTag();
-        holder.plantName.setText(getItem(position).getPlantName());
-
-        String url = getItem(position).getPlantImageUrl();
-        Picasso.with(context).load(url).resize(100, 100).centerInside().placeholder(context.getResources().getDrawable(R.drawable.placeholder)).into(holder.plantImage);
+        holder.plantName.setText(getItem(position).getName());
 
         return rowView;
     }
