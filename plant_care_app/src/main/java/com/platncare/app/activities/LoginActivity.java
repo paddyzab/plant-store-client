@@ -12,14 +12,18 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import client.endpoint.TokenEndpoint;
+import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
+import model.Token;
+
+import java.io.IOException;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -29,28 +33,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     private static final String LOG_TAG = LoginActivity.class.getSimpleName();
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello",
-            "bar@example.com:world"
-    };
-
-    /**
-     * The default email to populate the email field with.
-     */
-    public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
     // Values for email and password at the time of the login attempt.
-    private String mEmail;
-    private String mPassword;
+    private String email;
+    private String password;
 
     // UI references.
     private EditText emailView;
@@ -61,6 +48,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private Button buttonGooglePlus;
     private Button buttonFacebook;
     private Button buttonTwitter;
+    private Token token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,22 +58,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         prepareActionBar();
 
-        // Set up the login form.
-        mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
         emailView = (EditText) findViewById(R.id.email);
-        emailView.setText(mEmail);
+        emailView.setText(email);
 
         passwordView = (EditText) findViewById(R.id.password);
-        passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
+        passwordView.setOnEditorActionListener(passwordOnEditorActionListener);
 
         loginFormView = findViewById(R.id.login_form);
         loginStatusView = findViewById(R.id.login_status);
@@ -105,13 +82,9 @@ public class LoginActivity extends Activity implements OnClickListener {
                 attemptLogin();
             }
         });
-    }
 
-    private void prepareActionBar() {
-        ActionBar actionBar = getActionBar();
-        if(actionBar != null) {
-            actionBar.hide();
-        }
+        //TODO: remove it later, for testing we need it.
+        populateWithTestData();
     }
 
     @Override
@@ -147,29 +120,29 @@ public class LoginActivity extends Activity implements OnClickListener {
         passwordView.setError(null);
 
         // Store values at the time of the login attempt.
-        mEmail = emailView.getText().toString();
-        mPassword = passwordView.getText().toString();
+        email = emailView.getText().toString();
+        password = passwordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password.
-        if (TextUtils.isEmpty(mPassword)) {
+        if (TextUtils.isEmpty(password)) {
             passwordView.setError(getString(R.string.error_field_required));
             focusView = passwordView;
             cancel = true;
-        } else if (mPassword.length() < 4) {
+        } else if (password.length() < 4) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
             cancel = true;
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(mEmail)) {
+        if (TextUtils.isEmpty(email)) {
             emailView.setError(getString(R.string.error_field_required));
             focusView = emailView;
             cancel = true;
-        } else if (!mEmail.contains("@")) {
+        } else if (!email.contains("@")) {
             emailView.setError(getString(R.string.error_invalid_email));
             focusView = emailView;
             cancel = true;
@@ -184,8 +157,36 @@ public class LoginActivity extends Activity implements OnClickListener {
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
+
+
+
+
             mAuthTask = new UserLoginTask();
             mAuthTask.execute((Void) null);
+        }
+    }
+
+    private void populateWithTestData() {
+        emailView.setText("patryk.zabicki@gmail.com");
+        passwordView.setText("wiosna12");
+    }
+
+    private void prepareActionBar() {
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null) {
+            actionBar.hide();
+        }
+    }
+
+    private void requestToken() {
+        try {
+            token = new TokenEndpoint().getToken(email, password);
+            Log.d(LOG_TAG, String.format("token is: %s", token.getToken()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HTTPClientException e) {
+            e.printStackTrace();
         }
     }
 
@@ -229,26 +230,17 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
     }
 
+    //TODO: move AsyncTasks to separate package
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
                 Thread.sleep(2000);
+                requestToken();
             } catch (InterruptedException e) {
                 return false;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-            // TODO: register the new account here.
             return true;
         }
 
@@ -272,10 +264,21 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
     }
 
+    private TextView.OnEditorActionListener passwordOnEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+            if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
+            }
+            return false;
+        }
+    };
 
     private void startFeedActivity() {
         //Start FeedActivity after successful Login
         Intent intent = new Intent(LoginActivity.this, FeedActivity.class);
+        intent.putExtra("token", token);
         startActivity(intent);
 
         //Destroy this activity to remove it from the activity stack

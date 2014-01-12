@@ -3,26 +3,35 @@ package com.platncare.app.activities;
 import android.app.Activity;
 ;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantsFeedFragment;
 import com.platncare.app.models.Plant;
 import com.platncare.app.utils.FragmentUtils;
+import model.Token;
 
 import java.util.ArrayList;
 
 public class FeedActivity extends Activity {
 
+    private final static String LOG_TAG = FeedActivity.class.getSimpleName();
 
     private PlantsFeedFragment plantsFeedFragment;
+    private Token token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
+        getExtras();
+
 
         attachInitialFragment();
+    }
+
+    private void getExtras() {
+        Bundle args = getIntent().getExtras();
+        token = (Token) args.getSerializable("token");
     }
 
     private void attachInitialFragment() {

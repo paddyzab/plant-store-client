@@ -17,7 +17,11 @@ repositories {
 dependencies {
     compile 'com.android.support:support-v4:19.0.+'
     compile group:'com.squareup.picasso', name:'picasso', version:'2.1.1'
-    compile group:'plant_store_sdk', name:'plant_store_sdk', version:'0.0.1'
+    compile (group:'plant_store_sdk', name:'plant_store_sdk', version:'0.0.1') {
+       exclude group: 'com.squareup.okhttp'
+       exclude group: 'com.sun.jersey'
+       exclude group: 'org.codehaus.jackson'
+    }
 }
 
 android {
