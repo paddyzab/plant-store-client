@@ -23,6 +23,7 @@ import com.platncare.app.R;
 import com.platncare.app.fragments.PlantDetailsFragment;
 import com.platncare.app.nfc.MimeType;
 import com.platncare.app.utils.FragmentUtils;
+import com.platncare.app.utils.Preferences;
 import model.Plant;
 
 import java.io.IOException;
@@ -59,8 +60,7 @@ public class PlantDetailsActivity extends Activity {
                 @Override
                 protected Plant doInBackground(Void... params) {
                     try {
-                        //TODO: move token to SharedPref
-                        return new PlantEndpoint().read("f53a8be8-e6b6-4ecb-bd39-4082c4c8c197", plantId);
+                        return new PlantEndpoint().read(Preferences.getAppToken(PlantDetailsActivity.this), plantId);
                     } catch (IOException e) {
                         e.printStackTrace();
                         return null;

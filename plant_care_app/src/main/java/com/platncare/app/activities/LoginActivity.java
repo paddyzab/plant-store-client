@@ -21,6 +21,7 @@ import android.widget.TextView;
 import client.endpoint.TokenEndpoint;
 import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
+import com.platncare.app.utils.Preferences;
 import model.Token;
 
 import java.io.IOException;
@@ -181,7 +182,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private void requestToken() {
         try {
             token = new TokenEndpoint().getToken(email, password);
-            Log.d(LOG_TAG, String.format("token is: %s", token.getToken()));
+            Preferences.saveAppToken(token.getToken(), LoginActivity.this);
 
         } catch (IOException e) {
             e.printStackTrace();
