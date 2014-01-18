@@ -14,6 +14,7 @@ import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import client.endpoint.PlantEndpoint;
@@ -51,7 +52,7 @@ public class PlantDetailsActivity extends Activity {
             NdefMessage msg = (NdefMessage) rawMsgs[0];
             NdefRecord plantRecord = msg.getRecords()[0];
             byte[] payload = plantRecord.getPayload();
-            final long plantId = ByteBuffer.wrap(payload).getInt();
+            final long plantId = ByteBuffer.wrap(payload).getLong();
 
             new AsyncTask<Void, Void, Plant>(){
 
@@ -96,11 +97,20 @@ public class PlantDetailsActivity extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.plant_details_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                return true;
+                break;
+            case R.id.menu_save:
+                writeTag();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -144,14 +154,14 @@ public class PlantDetailsActivity extends Activity {
      */
     private boolean writeTag(Tag tag) {
         // record to launch Play Store if app is not installed
-        NdefRecord appRecord = NdefRecord.createApplicationRecord("com.plantcare.app");
+        //NdefRecord appRecord = NdefRecord.createApplicationRecord("com.plantcare.app");
 
         // record that contains our custom "retro console" game data, using custom MIME_TYPE
         byte[] payload = ByteBuffer.allocate(8).putLong(plant.getId()).array();
         byte[] mimeBytes = MimeType.PLANT_CARE_TYPE.getBytes(Charset.forName("US-ASCII"));
         NdefRecord plantRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, mimeBytes,
                 new byte[0], payload);
-        NdefMessage message = new NdefMessage(new NdefRecord[] { plantRecord, appRecord});
+        NdefMessage message = new NdefMessage(new NdefRecord[] { plantRecord}); //appRecord
 
         try {
             // see if tag is already NDEF formatted
