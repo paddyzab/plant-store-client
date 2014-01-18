@@ -32,11 +32,12 @@ import java.nio.charset.Charset;
 
 public class PlantDetailsActivity extends Activity {
 
+    ActionBar actionBar;
     private Plant plant;
     private String PLANT_KEY = "plant";
     private PlantDetailsFragment plantDetailsFragment;
 
-    private NfcAdapter mAdapter;
+    private NfcAdapter adapter;
     private boolean inWriteMode;
 
     @Override
@@ -44,9 +45,9 @@ public class PlantDetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plant_details);
 
-        mAdapter = NfcAdapter.getDefaultAdapter(this);
+        adapter = NfcAdapter.getDefaultAdapter(this);
+        actionBar = getActionBar();
 
-        // see if app was started from a tag and show game console
         Intent intent = getIntent();
         if(intent.getType() != null && intent.getType().equals(MimeType.PLANT_CARE_TYPE)) {
             Parcelable[] rawMsgs = getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -74,19 +75,18 @@ public class PlantDetailsActivity extends Activity {
                 protected void onPostExecute(Plant plant) {
                     super.onPostExecute(plant);
                     displayMessage(plant.getKind().getLatinName());
-                    // TODO update UI
+                    actionBar.setTitle(plant.getName());
                 }
             }.execute();
 
-            //TODO: using plantId to request plantData, use Token to do it too.
         } else if (intent.hasExtra(PLANT_KEY)) {
             plant = (Plant) intent.getSerializableExtra(PLANT_KEY);
+            actionBar.setTitle(plant.getName());
         } else {
             throw new RuntimeException("Intent data are empty, this should not happen.");
         }
         displayData(plant);
         initActionBar();
-        //TODO add menu and from there save tag feature
         initFragments();
     }
 
@@ -131,9 +131,7 @@ public class PlantDetailsActivity extends Activity {
 
 
     private void initActionBar() {
-        ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //actionBar.setTitle(plant.getName());
     }
 
     private void writeTag() {
@@ -221,11 +219,11 @@ public class PlantDetailsActivity extends Activity {
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter[] filters = new IntentFilter[] { tagDetected };
 
-        mAdapter.enableForegroundDispatch(this, pendingIntent, filters, null);
+        adapter.enableForegroundDispatch(this, pendingIntent, filters, null);
     }
 
     private void disableWriteMode() {
-        mAdapter.disableForegroundDispatch(this);
+        adapter.disableForegroundDispatch(this);
     }
 
     private void displayMessage(String message) {
