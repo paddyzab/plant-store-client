@@ -11,10 +11,13 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.MenuItem;
 import android.widget.Toast;
+import client.endpoint.PlantEndpoint;
+import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantDetailsFragment;
 import com.platncare.app.nfc.MimeType;
@@ -22,6 +25,7 @@ import com.platncare.app.utils.FragmentUtils;
 import model.Plant;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 public class PlantDetailsActivity extends Activity {
@@ -46,7 +50,34 @@ public class PlantDetailsActivity extends Activity {
             Parcelable[] rawMsgs = getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             NdefMessage msg = (NdefMessage) rawMsgs[0];
             NdefRecord plantRecord = msg.getRecords()[0];
-            //TODO: using plantRecord we should have a way to request plant data from backend (more less unique)
+            byte[] payload = plantRecord.getPayload();
+            final long plantId = ByteBuffer.wrap(payload).getInt();
+
+            new AsyncTask<Void, Void, Plant>(){
+
+                @Override
+                protected Plant doInBackground(Void... params) {
+                    try {
+                        //TODO: move token to SharedPref
+                        return new PlantEndpoint().read("f53a8be8-e6b6-4ecb-bd39-4082c4c8c197", plantId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    } catch (HTTPClientException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Plant plant) {
+                    super.onPostExecute(plant);
+                    displayMessage(plant.getKind().getLatinName());
+                    // TODO update UI
+                }
+            }.execute();
+
+            //TODO: using plantId to request plantData, use Token to do it too.
         } else if (intent.hasExtra(PLANT_KEY)) {
             plant = (Plant) intent.getSerializableExtra(PLANT_KEY);
         } else {
@@ -92,7 +123,7 @@ public class PlantDetailsActivity extends Activity {
     private void initActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(plant.getName());
+        //actionBar.setTitle(plant.getName());
     }
 
     private void writeTag() {
@@ -116,7 +147,7 @@ public class PlantDetailsActivity extends Activity {
         NdefRecord appRecord = NdefRecord.createApplicationRecord("com.plantcare.app");
 
         // record that contains our custom "retro console" game data, using custom MIME_TYPE
-        byte[] payload = plant.getDescription().getBytes();
+        byte[] payload = ByteBuffer.allocate(8).putLong(plant.getId()).array();
         byte[] mimeBytes = MimeType.PLANT_CARE_TYPE.getBytes(Charset.forName("US-ASCII"));
         NdefRecord plantRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, mimeBytes,
                 new byte[0], payload);
