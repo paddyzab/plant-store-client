@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import client.endpoint.PlantEndpoint;
 import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
+import com.platncare.app.backend.GetPlantAsyncTask;
+import com.platncare.app.backend.GetPlantExecutor;
 import com.platncare.app.fragments.PlantDetailsFragment;
 import com.platncare.app.nfc.MimeType;
 import com.platncare.app.utils.FragmentUtils;
@@ -36,6 +38,7 @@ public class PlantDetailsActivity extends Activity {
     private Plant plant;
     private String PLANT_KEY = "plant";
     private PlantDetailsFragment plantDetailsFragment;
+    private GetPlantAsyncTask getPlantAsyncTask;
 
     private NfcAdapter adapter;
     private boolean inWriteMode;
@@ -47,46 +50,9 @@ public class PlantDetailsActivity extends Activity {
 
         adapter = NfcAdapter.getDefaultAdapter(this);
         actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        if(intent.getType() != null && intent.getType().equals(MimeType.PLANT_CARE_TYPE)) {
-            Parcelable[] rawMsgs = getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage msg = (NdefMessage) rawMsgs[0];
-            NdefRecord plantRecord = msg.getRecords()[0];
-            byte[] payload = plantRecord.getPayload();
-            final long plantId = ByteBuffer.wrap(payload).getLong();
-
-            new AsyncTask<Void, Void, Plant>(){
-
-                @Override
-                protected Plant doInBackground(Void... params) {
-                    try {
-                        return new PlantEndpoint().read(Preferences.getAppToken(PlantDetailsActivity.this), plantId);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return null;
-                    } catch (HTTPClientException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(Plant plant) {
-                    super.onPostExecute(plant);
-                    MessagesUtils.displayToastMessage(plant.getKind().getLatinName(), PlantDetailsActivity.this);
-                    actionBar.setTitle(plant.getName());
-                }
-            }.execute();
-
-        } else if (intent.hasExtra(PLANT_KEY)) {
-            plant = (Plant) intent.getSerializableExtra(PLANT_KEY);
-            actionBar.setTitle(plant.getName());
-        } else {
-            throw new RuntimeException("Intent data are empty, this should not happen.");
-        }
-        displayData(plant);
-        initActionBar();
+        populatePlantData(getIntent());
         initFragments();
     }
 
@@ -129,9 +95,38 @@ public class PlantDetailsActivity extends Activity {
         }
     }
 
+    private void populatePlantData(Intent intent) {
 
-    private void initActionBar() {
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(intent.getType() != null && intent.getType().equals(MimeType.PLANT_CARE_TYPE)) {
+
+            getPlantAsyncTask = new GetPlantAsyncTask(new GetPlantExecutor() {
+                @Override
+                public void onSuccess(Plant plant) {
+                    displayData(plant);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+            getPlantAsyncTask.execute(this, getPlantIdFromNDEFMessage());
+
+        } else if (intent.hasExtra(PLANT_KEY)) {
+            plant = (Plant) intent.getSerializableExtra(PLANT_KEY);
+            displayData(plant);
+        } else {
+            throw new RuntimeException("Intent data are empty, this should not happen.");
+        }
+
+    }
+
+    private long getPlantIdFromNDEFMessage() {
+        Parcelable[] rawMsgs = getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        NdefRecord plantRecord = msg.getRecords()[0];
+        byte[] payload = plantRecord.getPayload();
+        return ByteBuffer.wrap(payload).getLong();
     }
 
     private void writeTag() {
@@ -139,7 +134,7 @@ public class PlantDetailsActivity extends Activity {
     }
 
     private void displayData(Plant plant) {
-        //TODO populate UI elements with the plant Data
+        actionBar.setTitle(plant.getName());
     }
 
     private void initFragments() {
