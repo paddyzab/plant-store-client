@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="message_read_only_tag">Cannot write, read-only tag.</string>
+    <string name="message_not_enough_free_space">Tag doesn\'t have enough free space.</string>
+    <string name="message_tag_written_successfully">Tag written successfully.</string>
+    <string name="message_unable_to_format">Unable to format tag.</string>
+    <string name="message_no_ndef_support">Tag doesn\'t appear to support NDEF format.</string>
+    <string name="message_failed_to_write">Failed to write tag.</string>
+</resources>

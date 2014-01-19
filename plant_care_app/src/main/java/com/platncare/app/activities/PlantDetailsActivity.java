@@ -151,15 +151,17 @@ public class PlantDetailsActivity extends Activity {
      * Format a tag and write our NDEF message
      */
     private boolean writeTag(Tag tag) {
+        //TODO: after publishing app to the play store, create appRecord
         // record to launch Play Store if app is not installed
         //NdefRecord appRecord = NdefRecord.createApplicationRecord("com.plantcare.app");
 
-        // record that contains our custom "retro console" game data, using custom MIME_TYPE
         byte[] payload = ByteBuffer.allocate(8).putLong(plant.getId()).array();
         byte[] mimeBytes = MimeType.PLANT_CARE_TYPE.getBytes(Charset.forName("US-ASCII"));
         NdefRecord plantRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, mimeBytes,
                 new byte[0], payload);
-        NdefMessage message = new NdefMessage(new NdefRecord[] { plantRecord}); //appRecord
+
+        //TODO later to NdefRecord appRecord
+        NdefMessage message = new NdefMessage(new NdefRecord[] {plantRecord});
 
         try {
             // see if tag is already NDEF formatted
@@ -168,19 +170,19 @@ public class PlantDetailsActivity extends Activity {
                 ndef.connect();
 
                 if (!ndef.isWritable()) {
-                    displayMessage("Read-only tag.");
+                    displayMessage(R.string.message_read_only_tag);
                     return false;
                 }
 
                 // work out how much space we need for the data
                 int size = message.toByteArray().length;
                 if (ndef.getMaxSize() < size) {
-                    displayMessage("Tag doesn't have enough free space.");
+                    displayMessage(R.string.message_not_enough_free_space);
                     return false;
                 }
 
                 ndef.writeNdefMessage(message);
-                displayMessage("Tag written successfully.");
+                displayMessage(R.string.message_tag_written_successfully);
                 return true;
             } else {
                 // attempt to format tag
@@ -189,19 +191,19 @@ public class PlantDetailsActivity extends Activity {
                     try {
                         format.connect();
                         format.format(message);
-                        displayMessage("Tag written successfully!\nClose this app and scan tag.");
+                        displayMessage(R.string.message_tag_written_successfully);
                         return true;
                     } catch (IOException e) {
-                        displayMessage("Unable to format tag to NDEF.");
+                        displayMessage(R.string.message_unable_to_format);
                         return false;
                     }
                 } else {
-                    displayMessage("Tag doesn't appear to support NDEF format.");
+                    displayMessage(R.string.message_no_ndef_support);
                     return false;
                 }
             }
         } catch (Exception e) {
-            displayMessage("Failed to write tag");
+            displayMessage(R.string.message_failed_to_write);
         }
 
         return false;
@@ -224,6 +226,10 @@ public class PlantDetailsActivity extends Activity {
 
     private void disableWriteMode() {
         adapter.disableForegroundDispatch(this);
+    }
+
+    private void displayMessage(int stringId) {
+        Toast.makeText(PlantDetailsActivity.this, getString(stringId), Toast.LENGTH_LONG).show();
     }
 
     private void displayMessage(String message) {
