@@ -29,10 +29,7 @@ public class GetPlantAsyncTask extends AsyncTask<Object, Void, Plant> {
             Long plantId = (Long) params[1];
             return new PlantEndpoint().read(Preferences.getAppToken(context), plantId);
 
-        } catch (IOException e) {
-            this.exception = e;
-            return null;
-        } catch (HTTPClientException e) {
+        } catch (Exception e) {
             this.exception = e;
             return null;
         }
