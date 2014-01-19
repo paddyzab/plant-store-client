@@ -16,13 +16,13 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import client.endpoint.PlantEndpoint;
 import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantDetailsFragment;
 import com.platncare.app.nfc.MimeType;
 import com.platncare.app.utils.FragmentUtils;
+import com.platncare.app.utils.MessagesUtils;
 import com.platncare.app.utils.Preferences;
 import model.Plant;
 
@@ -74,7 +74,7 @@ public class PlantDetailsActivity extends Activity {
                 @Override
                 protected void onPostExecute(Plant plant) {
                     super.onPostExecute(plant);
-                    displayMessage(plant.getKind().getLatinName());
+                    MessagesUtils.displayToastMessage(plant.getKind().getLatinName(), PlantDetailsActivity.this);
                     actionBar.setTitle(plant.getName());
                 }
             }.execute();
@@ -170,19 +170,19 @@ public class PlantDetailsActivity extends Activity {
                 ndef.connect();
 
                 if (!ndef.isWritable()) {
-                    displayMessage(R.string.message_read_only_tag);
+                    MessagesUtils.displayToastMessage(R.string.message_read_only_tag, this);
                     return false;
                 }
 
                 // work out how much space we need for the data
                 int size = message.toByteArray().length;
                 if (ndef.getMaxSize() < size) {
-                    displayMessage(R.string.message_not_enough_free_space);
+                    MessagesUtils.displayToastMessage(R.string.message_not_enough_free_space, this);
                     return false;
                 }
 
                 ndef.writeNdefMessage(message);
-                displayMessage(R.string.message_tag_written_successfully);
+                MessagesUtils.displayToastMessage(R.string.message_tag_written_successfully, this);
                 return true;
             } else {
                 // attempt to format tag
@@ -191,19 +191,19 @@ public class PlantDetailsActivity extends Activity {
                     try {
                         format.connect();
                         format.format(message);
-                        displayMessage(R.string.message_tag_written_successfully);
+                        MessagesUtils.displayToastMessage(R.string.message_tag_written_successfully, this);
                         return true;
                     } catch (IOException e) {
-                        displayMessage(R.string.message_unable_to_format);
+                        MessagesUtils.displayToastMessage(R.string.message_unable_to_format, this);
                         return false;
                     }
                 } else {
-                    displayMessage(R.string.message_no_ndef_support);
+                    MessagesUtils.displayToastMessage(R.string.message_no_ndef_support, this);
                     return false;
                 }
             }
         } catch (Exception e) {
-            displayMessage(R.string.message_failed_to_write);
+            MessagesUtils.displayToastMessage(R.string.message_failed_to_write, this);
         }
 
         return false;
@@ -226,13 +226,5 @@ public class PlantDetailsActivity extends Activity {
 
     private void disableWriteMode() {
         adapter.disableForegroundDispatch(this);
-    }
-
-    private void displayMessage(int stringId) {
-        Toast.makeText(PlantDetailsActivity.this, getString(stringId), Toast.LENGTH_LONG).show();
-    }
-
-    private void displayMessage(String message) {
-        Toast.makeText(PlantDetailsActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }
