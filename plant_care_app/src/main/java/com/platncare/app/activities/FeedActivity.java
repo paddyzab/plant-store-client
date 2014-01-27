@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantsFeedFragment;
 import com.platncare.app.utils.FragmentUtils;
+import com.platncare.app.utils.IntentKeys;
 import model.Plant;
 import model.Token;
 
@@ -29,7 +30,14 @@ public class FeedActivity extends Activity {
 
     private void getExtras() {
         Bundle args = getIntent().getExtras();
-        token = (Token) args.getSerializable("token");
+
+        if(args != null) {
+            if(args.containsKey(IntentKeys.TOKEN_KEY)) {
+                token = (Token) args.getSerializable(IntentKeys.TOKEN_KEY);
+            } else {
+                new RuntimeException("To initiate we need Token Key.");
+            }
+        }
     }
 
     private void attachInitialFragment() {

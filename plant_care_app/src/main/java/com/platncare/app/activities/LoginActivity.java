@@ -21,6 +21,7 @@ import android.widget.TextView;
 import client.endpoint.TokenEndpoint;
 import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
+import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
 import model.Token;
 
@@ -237,7 +238,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         protected Boolean doInBackground(Void... params) {
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(300);
                 requestToken();
             } catch (InterruptedException e) {
                 return false;
@@ -279,7 +280,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private void startFeedActivity() {
         //Start FeedActivity after successful Login
         Intent intent = new Intent(LoginActivity.this, FeedActivity.class);
-        intent.putExtra("token", token);
+        intent.putExtra(IntentKeys.TOKEN_KEY, token);
         startActivity(intent);
 
         //Destroy this activity to remove it from the activity stack
