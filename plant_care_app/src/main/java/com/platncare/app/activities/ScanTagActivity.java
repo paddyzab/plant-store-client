@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -12,6 +13,7 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.*;
 import com.platncare.app.R;
@@ -26,11 +28,13 @@ public class ScanTagActivity extends Activity {
 
     private ActionBar actionBar;
     private TextView textViewStatus;
+    private TextView textViewCounter;
     private Button buttonWrite;
 
     private NfcAdapter adapter;
     private boolean inWriteMode;
     private long plantId;
+    private Timer timerCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,42 @@ public class ScanTagActivity extends Activity {
         disableWriteMode();
     }
 
+    public class Timer extends CountDownTimer {
+        public Timer() {
+            super(3000, 1000);
+        }
+
+        @Override
+        public void onFinish() {
+            finish();
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            textViewCounter.setText("seconds remaining: " + millisUntilFinished / 1000);
+
+        }
+    }
+
+    /**
+     * Called when our blank tag is scanned executing the PendingIntent
+     */
+    @Override
+    public void onNewIntent(Intent intent) {
+        if(inWriteMode) {
+            inWriteMode = false;
+
+            // write to newly scanned tag
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            if(writeTag(tag)) {
+                timerCount.start();
+            } else {
+                //do something to start again
+            }
+        }
+    }
+
     private void getExtras() {
         Bundle args = getIntent().getExtras();
 
@@ -62,9 +102,15 @@ public class ScanTagActivity extends Activity {
     }
 
     private void initViews() {
-        textViewStatus = (TextView) findViewById(R.id.textViewMessage);
-        buttonWrite = (Button) findViewById(R.id.buttonWrite);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/sourcesansproregular.ttf");
 
+        textViewStatus = (TextView) findViewById(R.id.textViewMessage);
+        textViewStatus.setTypeface(typeface);
+
+        textViewCounter = (TextView) findViewById(R.id.textViewCounter);
+        textViewCounter.setTypeface(typeface);
+
+        buttonWrite = (Button) findViewById(R.id.buttonWrite);
         buttonWrite.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -72,20 +118,6 @@ public class ScanTagActivity extends Activity {
                 enableWriteMode();
             }
         });
-    }
-
-    /**
-     * Called when our blank tag is scanned executing the PendingIntent
-     */
-    @Override
-    public void onNewIntent(Intent intent) {
-        if(inWriteMode) {
-            inWriteMode = false;
-
-            // write to newly scanned tag
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            writeTag(tag);
-        }
     }
 
     /**

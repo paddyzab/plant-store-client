@@ -35,7 +35,7 @@ public class FeedActivity extends Activity {
             if(args.containsKey(IntentKeys.TOKEN_KEY)) {
                 token = (Token) args.getSerializable(IntentKeys.TOKEN_KEY);
             } else {
-                new RuntimeException("To initiate we need Token Key.");
+                new RuntimeException("To initiate we need TokenKey.");
             }
         }
     }
