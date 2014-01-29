@@ -5,11 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,6 +49,10 @@ public class LoginActivity extends Activity implements OnClickListener {
     private TextView loginStatusMessageView;
     private Token token;
 
+    private final String emailKey = "com.plantcare.app.email";
+    private final String passwordKey = "com.plantcare.app.password";
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +86,26 @@ public class LoginActivity extends Activity implements OnClickListener {
             }
         });
 
-        //TODO: remove it later, for testing we need it.
-        populateWithTestData();
+        authTask = new UserLoginTask();
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(sharedPreferences.contains(emailKey)) {
+            email = sharedPreferences.getString(emailKey, "default");
+        }
+        if(sharedPreferences.contains(passwordKey)) {
+            password = sharedPreferences.getString(passwordKey, "default");
+        }
+
+        if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+            loginStatusMessageView.setText(R.string.login_progress_signing_in);
+            showProgress(true);
+            authTask.execute((Void) null);
+        }
     }
 
     @Override
@@ -158,18 +183,8 @@ public class LoginActivity extends Activity implements OnClickListener {
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-
-
-
-
-            authTask = new UserLoginTask();
             authTask.execute((Void) null);
         }
-    }
-
-    private void populateWithTestData() {
-        emailView.setText("patryk.zabicki@gmail.com");
-        passwordView.setText("wiosna12");
     }
 
     private void prepareActionBar() {
@@ -251,6 +266,7 @@ public class LoginActivity extends Activity implements OnClickListener {
             showProgress(false);
 
             if (success) {
+                persistCredentials();
                 startFeedActivity();
             } else {
                 passwordView.setError(getString(R.string.error_incorrect_password));
@@ -263,6 +279,13 @@ public class LoginActivity extends Activity implements OnClickListener {
             authTask = null;
             showProgress(false);
         }
+    }
+
+    private void persistCredentials() {
+        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+        editor.putString(emailKey, email);
+        editor.putString(passwordKey, password);
+        editor.commit();
     }
 
     private TextView.OnEditorActionListener passwordOnEditorActionListener = new TextView.OnEditorActionListener() {
