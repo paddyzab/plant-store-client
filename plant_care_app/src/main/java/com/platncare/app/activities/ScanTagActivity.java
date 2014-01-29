@@ -26,7 +26,6 @@ import java.nio.charset.Charset;
 
 public class ScanTagActivity extends Activity {
 
-    private ActionBar actionBar;
     private TextView textViewStatus;
     private TextView textViewCounter;
     private Button buttonWrite;
@@ -46,38 +45,13 @@ public class ScanTagActivity extends Activity {
         initViews();
         adapter = NfcAdapter.getDefaultAdapter(this);
         timerCount = new Timer();
+        buttonWrite.setEnabled(true);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         disableWriteMode();
-    }
-
-    public class Timer extends CountDownTimer {
-        public Timer() {
-            super(3000, 1000);
-        }
-
-        @Override
-        public void onFinish() {
-            textViewCounter.setText("seconds remaining: " + 0);
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            textViewCounter.setVisibility(View.VISIBLE);
-            Toast.makeText(ScanTagActivity.this, "Tag written", Toast.LENGTH_LONG).show();
-            finish();
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            textViewCounter.setText("seconds remaining: " + millisUntilFinished / 1000);
-
-        }
     }
 
     /**
@@ -120,6 +94,7 @@ public class ScanTagActivity extends Activity {
 
             @Override
             public void onClick(View v) {
+                buttonWrite.setEnabled(true);
                 enableWriteMode();
             }
         });
@@ -217,9 +192,36 @@ public class ScanTagActivity extends Activity {
     }
 
     private void initActionBar() {
-        actionBar = getActionBar();
+        ActionBar actionBar = getActionBar();
         if(actionBar != null) {
             actionBar.hide();
+        }
+    }
+
+    private class Timer extends CountDownTimer {
+        public Timer() {
+            super(3000, 1000);
+        }
+
+        @Override
+        public void onFinish() {
+            textViewCounter.setText("seconds remaining: " + 0);
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            textViewCounter.setVisibility(View.VISIBLE);
+            Toast.makeText(ScanTagActivity.this, "Tag written", Toast.LENGTH_LONG).show();
+            buttonWrite.setEnabled(true);
+            finish();
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            textViewCounter.setText("seconds remaining: " + millisUntilFinished / 1000);
+
         }
     }
 }

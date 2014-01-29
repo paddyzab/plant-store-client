@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,8 +32,6 @@ import java.io.IOException;
  */
 public class LoginActivity extends Activity implements OnClickListener {
 
-    private static final String LOG_TAG = LoginActivity.class.getSimpleName();
-
     private UserLoginTask authTask = null;
 
     // Values for email and password at the time of the login attempt.
@@ -47,9 +44,6 @@ public class LoginActivity extends Activity implements OnClickListener {
     private View loginFormView;
     private View loginStatusView;
     private TextView loginStatusMessageView;
-    private Button buttonGooglePlus;
-    private Button buttonFacebook;
-    private Button buttonTwitter;
     private Token token;
 
     @Override
@@ -70,9 +64,9 @@ public class LoginActivity extends Activity implements OnClickListener {
         loginStatusView = findViewById(R.id.login_status);
         loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-        buttonGooglePlus = (Button) findViewById(R.id.buttonGooglePlus);
-        buttonFacebook = (Button) findViewById(R.id.buttonFacebook);
-        buttonTwitter = (Button) findViewById(R.id.buttonTwitter);
+        Button buttonGooglePlus = (Button) findViewById(R.id.buttonGooglePlus);
+        Button buttonFacebook = (Button) findViewById(R.id.buttonFacebook);
+        Button buttonTwitter = (Button) findViewById(R.id.buttonTwitter);
 
         buttonGooglePlus.setOnClickListener(this);
         buttonFacebook.setOnClickListener(this);
@@ -122,8 +116,13 @@ public class LoginActivity extends Activity implements OnClickListener {
         passwordView.setError(null);
 
         // Store values at the time of the login attempt.
-        email = emailView.getText().toString();
-        password = passwordView.getText().toString();
+
+        if(emailView.getText() != null) {
+            email = emailView.getText().toString();
+        }
+        if(passwordView.getText() != null) {
+            password = passwordView.getText().toString();
+        }
 
         boolean cancel = false;
         View focusView = null;

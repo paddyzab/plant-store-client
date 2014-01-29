@@ -25,22 +25,26 @@ public class PlantDetailsActivity extends Activity {
 
     private ActionBar actionBar;
     private Plant plant;
-    private PlantDetailsFragment plantDetailsFragment;
     private GetPlantAsyncTask getPlantAsyncTask;
-
-    private NfcAdapter adapter;
-    private boolean inWriteMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plant_details);
 
-        adapter = NfcAdapter.getDefaultAdapter(this);
         initActionBar();
 
         populatePlantData(getIntent());
         initFragments();
+    }
+
+    protected void onPause() {
+        super.onPause();
+
+        if(getPlantAsyncTask != null) {
+            getPlantAsyncTask.cancel(true);
+        }
+
     }
 
     @Override
@@ -56,13 +60,13 @@ public class PlantDetailsActivity extends Activity {
                 finish();
                 break;
             case R.id.menu_save:
-                writeTag();
+                startWriteTagActivity();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void writeTag() {
+    private void startWriteTagActivity() {
         Intent intent = new Intent(PlantDetailsActivity.this, ScanTagActivity.class);
         intent.putExtra(IntentKeys.PLANT_KEY, plant.getId());
 
@@ -108,12 +112,14 @@ public class PlantDetailsActivity extends Activity {
     }
 
     private void initFragments() {
-        plantDetailsFragment = new PlantDetailsFragment();
+        PlantDetailsFragment plantDetailsFragment = new PlantDetailsFragment();
         FragmentUtils.setFragment(this, plantDetailsFragment, R.id.fragment_container);
     }
 
     private void initActionBar() {
         actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 }
