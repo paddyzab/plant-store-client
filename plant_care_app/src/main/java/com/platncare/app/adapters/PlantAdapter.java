@@ -31,20 +31,23 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
             rowView = inflater.inflate(R.layout.adapter_plant, parent, false);
 
             PlantHolder holder = new PlantHolder();
-            holder.plantImage = (ImageView) rowView.findViewById(R.id.imageViewPlant);
-            holder.plantName = (TextView) rowView.findViewById(R.id.textViewPlantName);
+            holder.imageViewPlant = (ImageView) rowView.findViewById(R.id.imageViewPlant);
+            holder.textViewPlantName = (TextView) rowView.findViewById(R.id.textViewPlantName);
+            holder.textViewLatin = (TextView) rowView.findViewById(R.id.textViewLatin);
 
             rowView.setTag(holder);
         }
 
         PlantHolder holder = (PlantHolder) rowView.getTag();
-        holder.plantName.setText(getItem(position).getName());
+        holder.textViewPlantName.setText(getItem(position).getName().toUpperCase());
+        holder.textViewLatin.setText(getItem(position).getKind().getLatinName());
 
         return rowView;
     }
 
     static class PlantHolder {
-        public ImageView plantImage;
-        public TextView plantName;
+        public ImageView imageViewPlant;
+        public TextView textViewPlantName;
+        public TextView textViewLatin;
     }
 }
