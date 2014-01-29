@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="initial_scan_message">Scan the tag.\nWhen ready press the button.</string>
+    <string name="initial_scan_message">When ready press the button.\nAnd press Tag to the back of device.</string>
 
     <string name="message_read_only_tag">Cannot write, read-only tag.</string>
     <string name="message_not_enough_free_space">Tag doesn\'t have enough free space.</string>

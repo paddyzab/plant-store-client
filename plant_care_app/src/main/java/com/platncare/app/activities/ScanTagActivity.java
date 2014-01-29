@@ -45,6 +45,7 @@ public class ScanTagActivity extends Activity {
         initActionBar();
         initViews();
         adapter = NfcAdapter.getDefaultAdapter(this);
+        timerCount = new Timer();
     }
 
     @Override
@@ -60,6 +61,15 @@ public class ScanTagActivity extends Activity {
 
         @Override
         public void onFinish() {
+            textViewCounter.setText("seconds remaining: " + 0);
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            textViewCounter.setVisibility(View.VISIBLE);
+            Toast.makeText(ScanTagActivity.this, "Tag written", Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -80,12 +90,7 @@ public class ScanTagActivity extends Activity {
 
             // write to newly scanned tag
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-
-            if(writeTag(tag)) {
-                timerCount.start();
-            } else {
-                //do something to start again
-            }
+            writeTag(tag);
         }
     }
 
@@ -96,7 +101,7 @@ public class ScanTagActivity extends Activity {
             if(args.containsKey(IntentKeys.PLANT_KEY)) {
                 plantId = args.getLong(IntentKeys.PLANT_KEY);
             } else {
-                new RuntimeException("To initiate we need PlantKey");
+                throw new RuntimeException("To initiate we need PlantKey");
             }
         }
     }
@@ -155,6 +160,7 @@ public class ScanTagActivity extends Activity {
                 }
 
                 ndef.writeNdefMessage(message);
+                startCounting();
                 displayMessage(R.string.message_tag_written_successfully);
                 return true;
             } else {
@@ -182,6 +188,11 @@ public class ScanTagActivity extends Activity {
         return false;
     }
 
+    private void startCounting() {
+        textViewCounter.setVisibility(View.VISIBLE);
+        timerCount.start();
+    }
+
     /**
      * Force this Activity to get NFC events first
      */
@@ -207,6 +218,8 @@ public class ScanTagActivity extends Activity {
 
     private void initActionBar() {
         actionBar = getActionBar();
-        actionBar.hide();
+        if(actionBar != null) {
+            actionBar.hide();
+        }
     }
 }
