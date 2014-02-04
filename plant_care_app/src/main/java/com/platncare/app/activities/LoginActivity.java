@@ -132,9 +132,9 @@ public class LoginActivity extends Activity implements OnClickListener {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        if (authTask != null) {
-            return;
-        }
+//        if (authTask != null) {
+//            return;
+//        }
 
         // Reset errors.
         emailView.setError(null);
