@@ -44,7 +44,6 @@ public class PlantDetailsActivity extends Activity {
         if(getPlantAsyncTask != null) {
             getPlantAsyncTask.cancel(true);
         }
-
     }
 
     @Override

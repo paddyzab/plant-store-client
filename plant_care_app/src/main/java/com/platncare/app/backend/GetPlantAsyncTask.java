@@ -12,8 +12,6 @@ import java.io.IOException;
 
 public class GetPlantAsyncTask extends AsyncTask<Object, Void, Plant> {
 
-    private final static String LOG_TAG = GetPlantAsyncTask.class.getSimpleName();
-
     private GetPlantExecutor executor;
     private Exception exception;
 
@@ -24,7 +22,6 @@ public class GetPlantAsyncTask extends AsyncTask<Object, Void, Plant> {
     @Override
     protected Plant doInBackground(Object... params) {
         try {
-
             Context context = (Context) params[0];
             Long plantId = (Long) params[1];
             return new PlantEndpoint().read(Preferences.getAppToken(context), plantId);

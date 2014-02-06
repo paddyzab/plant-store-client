@@ -5,14 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,28 +17,23 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import client.endpoint.TokenEndpoint;
 import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
+import com.platncare.app.backend.RequestTokenAsyncTask;
+import com.platncare.app.backend.RequestTokenExecutor;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
 import model.Token;
 
 import java.io.IOException;
 
-/**
- * Activity which displays a login screen to the user, offering registration as
- * well. Supports Facebook, Google Plus and Twitter login.
- */
 public class LoginActivity extends Activity implements OnClickListener {
 
-    private UserLoginTask authTask = null;
-
-    // Values for email and password at the time of the login attempt.
     private String email;
     private String password;
 
-    // UI references.
     private EditText emailView;
     private EditText passwordView;
     private View loginFormView;
@@ -52,6 +44,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private final String emailKey = "com.plantcare.app.email";
     private final String passwordKey = "com.plantcare.app.password";
     private SharedPreferences sharedPreferences;
+    private RequestTokenAsyncTask requestTokenAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +79,34 @@ public class LoginActivity extends Activity implements OnClickListener {
             }
         });
 
-        authTask = new UserLoginTask();
+        requestTokenAsyncTask = new RequestTokenAsyncTask(executor);
         sharedPreferences = getPreferences(MODE_PRIVATE);
+    }
+
+    private RequestTokenExecutor executor = new RequestTokenExecutor() {
+
+        @Override
+        public void onSuccess(Token token) {
+            LoginActivity.this.token = token;
+            persistCredentials();
+            startFeedActivity();
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            passwordView.setError(getString(R.string.error_incorrect_password));
+            passwordView.requestFocus();
+
+            Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    };
+
+    protected void onPause() {
+        super.onPause();
+
+        if(requestTokenAsyncTask != null) {
+            requestTokenAsyncTask.cancel(true);
+        }
     }
 
     @Override
@@ -104,7 +123,8 @@ public class LoginActivity extends Activity implements OnClickListener {
         if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            authTask.execute((Void) null);
+
+            requestTokenAsyncTask.execute(email, password);
         }
     }
 
@@ -113,14 +133,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         switch (view.getId()) {
             case R.id.buttonGooglePlus:
-                startFeedActivity();
+                //startFeedActivity();
                 break;
             case R.id.buttonFacebook:
-                startFeedActivity();
+                //startFeedActivity();
                 break;
 
             case R.id.buttonTwitter:
-                startFeedActivity();
+                //startFeedActivity();
                 break;
         }
 
@@ -132,15 +152,9 @@ public class LoginActivity extends Activity implements OnClickListener {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        if (authTask != null) {
-            return;
-        }
 
-        // Reset errors.
         emailView.setError(null);
         passwordView.setError(null);
-
-        // Store values at the time of the login attempt.
 
         if(emailView.getText() != null) {
             email = emailView.getText().toString();
@@ -152,7 +166,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password.
         if (TextUtils.isEmpty(password)) {
             passwordView.setError(getString(R.string.error_field_required));
             focusView = passwordView;
@@ -163,7 +176,6 @@ public class LoginActivity extends Activity implements OnClickListener {
             cancel = true;
         }
 
-        // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             emailView.setError(getString(R.string.error_field_required));
             focusView = emailView;
@@ -183,7 +195,7 @@ public class LoginActivity extends Activity implements OnClickListener {
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            authTask.execute((Void) null);
+            requestTokenAsyncTask.execute(email, password);
         }
     }
 
@@ -191,18 +203,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         ActionBar actionBar = getActionBar();
         if(actionBar != null) {
             actionBar.hide();
-        }
-    }
-
-    private void requestToken() {
-        try {
-            token = new TokenEndpoint().getToken(email, password);
-            Preferences.saveAppToken(token.getToken(), LoginActivity.this);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (HTTPClientException e) {
-            e.printStackTrace();
         }
     }
 
@@ -246,45 +246,11 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
     }
 
-    //TODO: move AsyncTasks to separate package
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            try {
-                Thread.sleep(300);
-                requestToken();
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            authTask = null;
-            showProgress(false);
-
-            if (success) {
-                persistCredentials();
-                startFeedActivity();
-            } else {
-                passwordView.setError(getString(R.string.error_incorrect_password));
-                passwordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            authTask = null;
-            showProgress(false);
-        }
-    }
-
     private void persistCredentials() {
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putString(emailKey, email);
         editor.putString(passwordKey, password);
+
         editor.commit();
     }
 
