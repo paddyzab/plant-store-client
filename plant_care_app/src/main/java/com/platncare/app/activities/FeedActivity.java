@@ -3,10 +3,13 @@ package com.platncare.app.activities;
 import android.app.Activity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantsFeedFragment;
 import com.platncare.app.utils.FragmentUtils;
 import com.platncare.app.utils.IntentKeys;
+import com.platncare.app.utils.Preferences;
 import model.Token;
 
 public class FeedActivity extends Activity {
@@ -21,6 +24,30 @@ public class FeedActivity extends Activity {
         getExtras();
 
         attachInitialFragment();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.feed_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.menu_logout:
+                startLogout();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void startLogout() {
+        Preferences.clearAllPreferences(FeedActivity.this);
+        finish();
     }
 
     private void getExtras() {

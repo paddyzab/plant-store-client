@@ -44,9 +44,6 @@ public class LoginActivity extends Activity implements OnClickListener {
     private TextView loginStatusMessageView;
     private Token token;
 
-    private final String emailKey = "com.plantcare.app.email";
-    private final String passwordKey = "com.plantcare.app.password";
-    private SharedPreferences sharedPreferences;
     private RequestTokenAsyncTask requestTokenAsyncTask;
 
     @Override
@@ -83,7 +80,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         });
 
         requestTokenAsyncTask = new RequestTokenAsyncTask(executor);
-        sharedPreferences = getPreferences(MODE_PRIVATE);
     }
 
     private RequestTokenExecutor executor = new RequestTokenExecutor() {
@@ -116,12 +112,9 @@ public class LoginActivity extends Activity implements OnClickListener {
     protected void onResume() {
         super.onResume();
 
-        if(sharedPreferences.contains(emailKey)) {
-            email = sharedPreferences.getString(emailKey, "default");
-        }
-        if(sharedPreferences.contains(passwordKey)) {
-            password = sharedPreferences.getString(passwordKey, "default");
-        }
+        email = Preferences.getEmail(LoginActivity.this);
+        password = Preferences.getPassword(LoginActivity.this);
+
 
         if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
@@ -250,11 +243,8 @@ public class LoginActivity extends Activity implements OnClickListener {
     }
 
     private void persistCredentials() {
-        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        editor.putString(emailKey, email);
-        editor.putString(passwordKey, password);
-
-        editor.commit();
+        Preferences.saveEmail(email, LoginActivity.this);
+        Preferences.savePassword(password, LoginActivity.this);
     }
 
     private TextView.OnEditorActionListener passwordOnEditorActionListener = new TextView.OnEditorActionListener() {
