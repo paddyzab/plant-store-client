@@ -80,7 +80,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         @Override
         public void onSuccess(Token token) {
             LoginActivity.this.stringToken = token.getToken();
-            persistCredentials();
+            Preferences.saveAppToken(stringToken, LoginActivity.this);
             startFeedActivity();
         }
 
@@ -105,23 +105,21 @@ public class LoginActivity extends Activity implements OnClickListener {
     protected void onResume() {
         super.onResume();
 
-        email = Preferences.getEmail(LoginActivity.this);
-        password = Preferences.getPassword(LoginActivity.this);
         String stringToken = Preferences.getAppToken(LoginActivity.this);
 
         //When we have token persisted just start FeedActivity
-        if(!TextUtils.isEmpty(stringToken)) {
+        if(stringToken !=null && !TextUtils.isEmpty(stringToken)) {
             this.stringToken = stringToken;
             startFeedActivity();
 
         //If token is empty but, we have email and password, request new token
-        } else {
+        } else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             requestNewToken();
         }
     }
 
     private void requestNewToken() {
-        if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+        if(TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
 
@@ -245,11 +243,6 @@ public class LoginActivity extends Activity implements OnClickListener {
             loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
             loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
-
-    private void persistCredentials() {
-        Preferences.saveEmail(email, LoginActivity.this);
-        Preferences.savePassword(password, LoginActivity.this);
     }
 
     private TextView.OnEditorActionListener passwordOnEditorActionListener = new TextView.OnEditorActionListener() {
