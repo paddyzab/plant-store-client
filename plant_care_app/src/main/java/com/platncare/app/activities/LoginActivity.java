@@ -5,14 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,8 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import client.endpoint.TokenEndpoint;
-import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.backend.RequestTokenAsyncTask;
 import com.platncare.app.backend.RequestTokenExecutor;
@@ -30,7 +24,6 @@ import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
 import model.Token;
 
-import java.io.IOException;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
@@ -42,7 +35,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private View loginFormView;
     private View loginStatusView;
     private TextView loginStatusMessageView;
-    private Token token;
+    private String stringToken;
 
     private RequestTokenAsyncTask requestTokenAsyncTask;
 
@@ -86,7 +79,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         @Override
         public void onSuccess(Token token) {
-            LoginActivity.this.token = token;
+            LoginActivity.this.stringToken = token.getToken();
             persistCredentials();
             startFeedActivity();
         }
@@ -114,8 +107,20 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         email = Preferences.getEmail(LoginActivity.this);
         password = Preferences.getPassword(LoginActivity.this);
+        String stringToken = Preferences.getAppToken(LoginActivity.this);
 
+        //When we have token persisted just start FeedActivity
+        if(!TextUtils.isEmpty(stringToken)) {
+            this.stringToken = stringToken;
+            startFeedActivity();
 
+        //If token is empty but, we have email and password, request new token
+        } else {
+            requestNewToken();
+        }
+    }
+
+    private void requestNewToken() {
         if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
@@ -261,7 +266,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private void startFeedActivity() {
         //Start FeedActivity after successful Login
         Intent intent = new Intent(LoginActivity.this, FeedActivity.class);
-        intent.putExtra(IntentKeys.TOKEN_KEY, token);
+        intent.putExtra(IntentKeys.TOKEN_KEY, stringToken);
         startActivity(intent);
 
         //Destroy this activity to remove it from the activity stack

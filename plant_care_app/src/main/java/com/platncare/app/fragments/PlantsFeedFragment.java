@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,9 @@ import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.activities.PlantDetailsActivity;
 import com.platncare.app.adapters.PlantAdapter;
+import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.views.EndlessListView;
 import model.Plant;
-import model.Token;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,14 +29,12 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     private ArrayList<Plant> plants = new ArrayList<Plant>();
     private PlantAdapter plantsAdapter;
     private PlantsTask plantsTask;
-    private static final String TOKEN_KEY = "token";
-    private static final String PLANT_KEY = "plant";
-    private Token token;
+    private String stringToken;
 
-    public static PlantsFeedFragment newInstance(Token token) {
+    public static PlantsFeedFragment newInstance(String stringToken) {
         PlantsFeedFragment fragment = new PlantsFeedFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TOKEN_KEY, token);
+        args.putString(IntentKeys.TOKEN_KEY, stringToken);
 
         fragment.setArguments(args);
         return fragment;
@@ -61,13 +58,13 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
 
     private void readExtras() {
         Bundle args = getArguments();
-        token = (Token) args.getSerializable(TOKEN_KEY);
+        stringToken = args.getString(IntentKeys.TOKEN_KEY);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), PlantDetailsActivity.class);
-        intent.putExtra(PLANT_KEY, plantsAdapter.getItem(position));
+        intent.putExtra(IntentKeys.PLANT_KEY, plantsAdapter.getItem(position));
         startActivity(intent);
     }
 
@@ -75,7 +72,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            requestPlants(token);
+            requestPlants(stringToken);
             return true;
         }
 
@@ -96,10 +93,10 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         endlessListViewPlants.setLoading(show);
     }
 
-    private void requestPlants(Token token) {
+    private void requestPlants(String token) {
 
         try {
-            plants = new PlantEndpoint().list(token.getToken());
+            plants = new PlantEndpoint().list(token);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (HTTPClientException e) {

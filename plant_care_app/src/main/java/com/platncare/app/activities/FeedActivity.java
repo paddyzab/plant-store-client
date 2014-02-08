@@ -15,7 +15,7 @@ import model.Token;
 public class FeedActivity extends Activity {
 
 
-    private Token token;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class FeedActivity extends Activity {
 
         if(args != null) {
             if(args.containsKey(IntentKeys.TOKEN_KEY)) {
-                token = (Token) args.getSerializable(IntentKeys.TOKEN_KEY);
+                token = args.getString(IntentKeys.TOKEN_KEY);
             } else {
                throw new RuntimeException("To initiate we need TokenKey.");
             }

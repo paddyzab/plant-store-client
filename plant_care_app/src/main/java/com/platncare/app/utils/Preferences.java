@@ -18,7 +18,7 @@ public class Preferences {
 
     public static String getAppToken(Context context) {
         prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-        return prefs.getString(APPTOKEN_KEY, "default");
+        return prefs.getString(APPTOKEN_KEY, "");
     }
 
     public static void saveEmail(String email,  Context context) {
