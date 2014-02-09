@@ -1,7 +1,6 @@
 package com.platncare.app.activities;
 
 import android.app.Activity;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +9,6 @@ import com.platncare.app.fragments.PlantsFeedFragment;
 import com.platncare.app.utils.FragmentUtils;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
-import model.Token;
 
 public class FeedActivity extends Activity {
 
@@ -53,11 +51,11 @@ public class FeedActivity extends Activity {
     private void getExtras() {
         Bundle args = getIntent().getExtras();
 
-        if(args != null) {
-            if(args.containsKey(IntentKeys.TOKEN_KEY)) {
+        if (args != null) {
+            if (args.containsKey(IntentKeys.TOKEN_KEY)) {
                 token = args.getString(IntentKeys.TOKEN_KEY);
             } else {
-               throw new RuntimeException("To initiate we need TokenKey.");
+                token = Preferences.getAppToken(this);
             }
         }
     }
