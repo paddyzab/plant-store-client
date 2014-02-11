@@ -2,7 +2,6 @@ package com.platncare.app.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Toast;
-import client.endpoint.PlantEndpoint;
-import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.activities.PlantDetailsActivity;
 import com.platncare.app.adapters.PlantAdapter;
@@ -21,15 +18,11 @@ import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.views.EndlessListView;
 import model.Plant;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlantsFeedFragment extends Fragment implements OnItemClickListener {
 
-    private static final String LOG_TAG = PlantsFeedFragment.class.getSimpleName();
-
     private EndlessListView endlessListViewPlants;
-    private ArrayList<Plant> plants = new ArrayList<Plant>();
     private PlantAdapter plantsAdapter;
     private String stringToken;
 
@@ -64,6 +57,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         startActivity(intent);
     }
 
+
     private void requestPlantsArray() {
         new GetPlantsListAsyncTask(executor).execute(stringToken);
     }
@@ -80,7 +74,8 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         @Override
         public void onFailure(Exception e) {
             showProgress(false);
-            Toast.makeText(getActivity(), "something went wrong: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), String.format(getString(R.string.error_message), e.getMessage()),
+                    Toast.LENGTH_LONG).show();
         }
     };
 
