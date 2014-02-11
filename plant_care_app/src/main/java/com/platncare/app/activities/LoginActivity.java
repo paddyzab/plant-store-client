@@ -21,6 +21,10 @@ import com.platncare.app.backend.RequestTokenAsyncTask;
 import com.platncare.app.backend.RequestTokenExecutor;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
+import com.throrinstudio.android.common.libs.validator.Form;
+import com.throrinstudio.android.common.libs.validator.Validate;
+import com.throrinstudio.android.common.libs.validator.validator.EmailValidator;
+import com.throrinstudio.android.common.libs.validator.validator.NotEmptyValidator;
 import model.Token;
 
 
@@ -35,6 +39,12 @@ public class LoginActivity extends Activity implements OnClickListener {
     private View loginStatusView;
     private TextView loginStatusMessageView;
     private String stringToken;
+    private Form form;
+
+    private Button buttonGooglePlus;
+    private Button buttonFacebook;
+    private Button buttonTwitter;
+    private Button signInButton;
 
     private RequestTokenAsyncTask requestTokenAsyncTask;
 
@@ -43,35 +53,44 @@ public class LoginActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
-
         prepareActionBar();
+        initViews();
+        initializeListeners();
+        createValidationForm();
+    }
 
+    private void initViews() {
         emailView = (EditText) findViewById(R.id.email);
         emailView.setText(email);
-
         passwordView = (EditText) findViewById(R.id.password);
         passwordView.setOnEditorActionListener(passwordOnEditorActionListener);
-
         loginFormView = findViewById(R.id.login_form);
         loginStatusView = findViewById(R.id.login_status);
         loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+        buttonGooglePlus = (Button) findViewById(R.id.buttonGooglePlus);
+        buttonFacebook = (Button) findViewById(R.id.buttonFacebook);
+        buttonTwitter = (Button) findViewById(R.id.buttonTwitter);
+        signInButton = (Button) findViewById(R.id.sign_in_button);
+    }
 
-        Button buttonGooglePlus = (Button) findViewById(R.id.buttonGooglePlus);
-        Button buttonFacebook = (Button) findViewById(R.id.buttonFacebook);
-        Button buttonTwitter = (Button) findViewById(R.id.buttonTwitter);
-
+    private void initializeListeners() {
         buttonGooglePlus.setOnClickListener(this);
         buttonFacebook.setOnClickListener(this);
         buttonTwitter.setOnClickListener(this);
+        signInButton.setOnClickListener(this);
+    }
 
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+    private void createValidationForm() {
+        Validate emailField = new Validate(emailView);
+        Validate passwordField = new Validate(passwordView);
 
-        requestTokenAsyncTask = new RequestTokenAsyncTask(executor);
+        emailField.addValidator(new NotEmptyValidator(LoginActivity.this));
+        emailField.addValidator(new EmailValidator(LoginActivity.this));
+        passwordField.addValidator(new NotEmptyValidator(LoginActivity.this));
+
+        form = new Form();
+        form.addValidates(emailField);
+        form.addValidates(passwordField);
     }
 
     private RequestTokenExecutor executor = new RequestTokenExecutor() {
@@ -85,19 +104,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         @Override
         public void onFailure(Exception e) {
+            showProgress(false);
             passwordView.setError(getString(R.string.error_incorrect_password));
             passwordView.requestFocus();
-
-            Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
 
     protected void onPause() {
         super.onPause();
-
-        if(requestTokenAsyncTask != null) {
-            requestTokenAsyncTask.cancel(true);
-        }
     }
 
     @Override
@@ -107,7 +121,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         String stringToken = Preferences.getAppToken(LoginActivity.this);
 
         //When we have token persisted just start FeedActivity
-        if(stringToken !=null && !TextUtils.isEmpty(stringToken)) {
+        if(stringToken != null && !TextUtils.isEmpty(stringToken)) {
             this.stringToken = stringToken;
             startFeedActivity();
 
@@ -122,7 +136,7 @@ public class LoginActivity extends Activity implements OnClickListener {
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
 
-            requestTokenAsyncTask.execute(email, password);
+            new RequestTokenAsyncTask(executor).execute(email, password);
         }
     }
 
@@ -140,6 +154,9 @@ public class LoginActivity extends Activity implements OnClickListener {
             case R.id.buttonTwitter:
                 //startFeedActivity();
                 break;
+            case R.id.sign_in_button:
+                attemptLogin();
+                break;
         }
 
     }
@@ -154,46 +171,16 @@ public class LoginActivity extends Activity implements OnClickListener {
         emailView.setError(null);
         passwordView.setError(null);
 
-        if(emailView.getText() != null) {
+        if(form.validate()) {
             email = emailView.getText().toString();
-        }
-        if(passwordView.getText() != null) {
             password = passwordView.getText().toString();
-        }
 
-        boolean cancel = false;
-        View focusView = null;
-
-        if (TextUtils.isEmpty(password)) {
-            passwordView.setError(getString(R.string.error_field_required));
-            focusView = passwordView;
-            cancel = true;
-        } else if (password.length() < 4) {
-            passwordView.setError(getString(R.string.error_invalid_password));
-            focusView = passwordView;
-            cancel = true;
-        }
-
-        if (TextUtils.isEmpty(email)) {
-            emailView.setError(getString(R.string.error_field_required));
-            focusView = emailView;
-            cancel = true;
-        } else if (!email.contains("@")) {
-            emailView.setError(getString(R.string.error_invalid_email));
-            focusView = emailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            requestTokenAsyncTask.execute(email, password);
+
+            new RequestTokenAsyncTask(executor).execute(email, password);
+        } else {
+            showProgress(false);
         }
     }
 

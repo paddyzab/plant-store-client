@@ -52,6 +52,11 @@
                 <artifactId>picasso</artifactId>
                 <version>${picasso.version}</version>
             </dependency>
+            <dependency>
+                <groupId>android-validator</groupId>
+                <artifactId>android-validator</artifactId>
+                <version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
