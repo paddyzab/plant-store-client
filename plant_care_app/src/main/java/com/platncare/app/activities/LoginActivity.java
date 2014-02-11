@@ -30,23 +30,17 @@ import model.Token;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
-    private String email;
-    private String password;
-
     private EditText emailView;
     private EditText passwordView;
     private View loginFormView;
     private View loginStatusView;
     private TextView loginStatusMessageView;
     private String stringToken;
-    private Form form;
-
+    private Form validationForm;
     private Button buttonGooglePlus;
     private Button buttonFacebook;
     private Button buttonTwitter;
     private Button signInButton;
-
-    private RequestTokenAsyncTask requestTokenAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +48,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         setContentView(R.layout.activity_login);
         prepareActionBar();
-        initViews();
+        initializeViews();
         initializeListeners();
         createValidationForm();
     }
 
-    private void initViews() {
+    private void initializeViews() {
         emailView = (EditText) findViewById(R.id.email);
-        emailView.setText(email);
         passwordView = (EditText) findViewById(R.id.password);
         passwordView.setOnEditorActionListener(passwordOnEditorActionListener);
         loginFormView = findViewById(R.id.login_form);
@@ -88,27 +81,10 @@ public class LoginActivity extends Activity implements OnClickListener {
         emailField.addValidator(new EmailValidator(LoginActivity.this));
         passwordField.addValidator(new NotEmptyValidator(LoginActivity.this));
 
-        form = new Form();
-        form.addValidates(emailField);
-        form.addValidates(passwordField);
+        validationForm = new Form();
+        validationForm.addValidates(emailField);
+        validationForm.addValidates(passwordField);
     }
-
-    private RequestTokenExecutor executor = new RequestTokenExecutor() {
-
-        @Override
-        public void onSuccess(Token token) {
-            LoginActivity.this.stringToken = token.getToken();
-            Preferences.saveAppToken(stringToken, LoginActivity.this);
-            startFeedActivity();
-        }
-
-        @Override
-        public void onFailure(Exception e) {
-            showProgress(false);
-            passwordView.setError(getString(R.string.error_incorrect_password));
-            passwordView.requestFocus();
-        }
-    };
 
     protected void onPause() {
         super.onPause();
@@ -124,19 +100,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         if(stringToken != null && !TextUtils.isEmpty(stringToken)) {
             this.stringToken = stringToken;
             startFeedActivity();
-
-        //If token is empty but, we have email and password, request new token
-        } else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-            requestNewToken();
-        }
-    }
-
-    private void requestNewToken() {
-        if(TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
-            loginStatusMessageView.setText(R.string.login_progress_signing_in);
-            showProgress(true);
-
-            new RequestTokenAsyncTask(executor).execute(email, password);
         }
     }
 
@@ -162,8 +125,8 @@ public class LoginActivity extends Activity implements OnClickListener {
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
+     * Attempts to sign in or register the account specified by the login validationForm.
+     * If there are validationForm errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
@@ -171,9 +134,9 @@ public class LoginActivity extends Activity implements OnClickListener {
         emailView.setError(null);
         passwordView.setError(null);
 
-        if(form.validate()) {
-            email = emailView.getText().toString();
-            password = passwordView.getText().toString();
+        if(validationForm.validate()) {
+            String email = emailView.getText().toString();
+            String password = passwordView.getText().toString();
 
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
@@ -184,12 +147,22 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
     }
 
-    private void prepareActionBar() {
-        ActionBar actionBar = getActionBar();
-        if(actionBar != null) {
-            actionBar.hide();
+    private RequestTokenExecutor executor = new RequestTokenExecutor() {
+
+        @Override
+        public void onSuccess(Token token) {
+            LoginActivity.this.stringToken = token.getToken();
+            Preferences.saveAppToken(stringToken, LoginActivity.this);
+            startFeedActivity();
         }
-    }
+
+        @Override
+        public void onFailure(Exception e) {
+            showProgress(false);
+
+            Toast.makeText(LoginActivity.this, "You gave us, wrong credentials", Toast.LENGTH_LONG).show();
+        }
+    };
 
     /**
      * Shows the progress UI and hides the login form.
@@ -240,6 +213,13 @@ public class LoginActivity extends Activity implements OnClickListener {
             return false;
         }
     };
+
+    private void prepareActionBar() {
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null) {
+            actionBar.hide();
+        }
+    }
 
     private void startFeedActivity() {
         //Start FeedActivity after successful Login
