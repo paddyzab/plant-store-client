@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import client.endpoint.PlantEndpoint;
 import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.activities.PlantDetailsActivity;
 import com.platncare.app.adapters.PlantAdapter;
+import com.platncare.app.backend.GetPlantsListAsyncTask;
+import com.platncare.app.backend.GetPlantsListExecutor;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.views.EndlessListView;
 import model.Plant;
@@ -28,7 +31,6 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     private EndlessListView endlessListViewPlants;
     private ArrayList<Plant> plants = new ArrayList<Plant>();
     private PlantAdapter plantsAdapter;
-    private PlantsTask plantsTask;
     private String stringToken;
 
     public static PlantsFeedFragment newInstance(String stringToken) {
@@ -49,16 +51,10 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         endlessListViewPlants = (EndlessListView) rootView.findViewById(R.id.endlessListViewPlants);
         endlessListViewPlants.setAdapter(plantsAdapter);
         endlessListViewPlants.setOnItemClickListener(this);
-
-        plantsTask = new PlantsTask();
-        plantsTask.execute((Void) null);
+        
+        requestPlantsArray();
 
         return rootView;
-    }
-
-    private void readExtras() {
-        Bundle args = getArguments();
-        stringToken = args.getString(IntentKeys.TOKEN_KEY);
     }
 
     @Override
@@ -68,39 +64,32 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         startActivity(intent);
     }
 
-    public class PlantsTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
+    private void requestPlantsArray() {
+        new GetPlantsListAsyncTask(executor).execute(stringToken);
+    }
 
-            requestPlants(stringToken);
-            return true;
+    private GetPlantsListExecutor executor = new GetPlantsListExecutor() {
+
+        @Override
+        public void onSuccess(ArrayList<Plant> plants) {
+            showProgress(false);
+            plantsAdapter = new PlantAdapter(getActivity(), plants);
+            endlessListViewPlants.setAdapter(plantsAdapter);
         }
 
         @Override
-        protected void onPostExecute(Boolean success) {
-
-            plantsTask = null;
-
-            if(success) {
-                showProgress(false);
-                plantsAdapter = new PlantAdapter(getActivity(), plants);
-                endlessListViewPlants.setAdapter(plantsAdapter);
-            }
+        public void onFailure(Exception e) {
+            showProgress(false);
+            Toast.makeText(getActivity(), "something went wrong: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    };
+
+    private void readExtras() {
+        Bundle args = getArguments();
+        stringToken = args.getString(IntentKeys.TOKEN_KEY);
     }
 
     private void showProgress(boolean show) {
         endlessListViewPlants.setLoading(show);
-    }
-
-    private void requestPlants(String token) {
-
-        try {
-            plants = new PlantEndpoint().list(token);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (HTTPClientException e) {
-            e.printStackTrace();
-        }
     }
 }
