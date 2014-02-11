@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -139,12 +141,19 @@ public class LoginActivity extends Activity implements OnClickListener {
             String password = passwordView.getText().toString();
 
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
+            hideKeyboard();
+
             showProgress(true);
 
             new RequestTokenAsyncTask(executor).execute(email, password);
         } else {
             showProgress(false);
         }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private RequestTokenExecutor executor = new RequestTokenExecutor() {
@@ -159,8 +168,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         @Override
         public void onFailure(Exception e) {
             showProgress(false);
-
-            Toast.makeText(LoginActivity.this, "You gave us, wrong credentials", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, getString(R.string.toast_wrong_credentials), Toast.LENGTH_LONG).show();
         }
     };
 
