@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_double"
+    android:paddingLeft="@dimen/padding_double"
+    android:paddingRight="@dimen/padding_double"
     android:background="@color/main_background">
 
         <com.platncare.app.views.EndlessListView
@@ -10,5 +11,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:background="@android:color/background_light"/>
+                android:background="@android:color/transparent"
+                android:paddingTop="@dimen/padding_double"
+                android:paddingBottom="@dimen/padding_double"
+                android:clipToPadding="false"/>
 </RelativeLayout>

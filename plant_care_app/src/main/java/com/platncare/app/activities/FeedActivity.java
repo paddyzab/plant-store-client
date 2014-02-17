@@ -36,11 +36,18 @@ public class FeedActivity extends Activity {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.menu_refresh:
+                refreshPlantsList();
+                break;
             case R.id.menu_logout:
                 startLogout();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshPlantsList() {
+
     }
 
     private void startLogout() {

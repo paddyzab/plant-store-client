@@ -4,7 +4,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="160dp"
-              android:padding="@dimen/padding_item">
+              android:padding="@dimen/padding_item"
+              android:background="@android:color/background_light">
 
     <ImageView android:id="@+id/imageViewPlant"
         android:layout_alignParentTop="true"
