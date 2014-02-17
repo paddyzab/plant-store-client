@@ -15,6 +15,7 @@ import com.platncare.app.adapters.PlantAdapter;
 import com.platncare.app.backend.GetPlantsListAsyncTask;
 import com.platncare.app.backend.GetPlantsListExecutor;
 import com.platncare.app.utils.IntentKeys;
+import com.platncare.app.views.EndlessGridView;
 import com.platncare.app.views.EndlessListView;
 import model.Plant;
 
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 public class PlantsFeedFragment extends Fragment implements OnItemClickListener {
 
-    private EndlessListView endlessListViewPlants;
+    private EndlessGridView endlessGridViewPlants;
     private PlantAdapter plantsAdapter;
     private String stringToken;
 
@@ -41,9 +42,9 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
         readExtras();
 
-        endlessListViewPlants = (EndlessListView) rootView.findViewById(R.id.endlessListViewPlants);
-        endlessListViewPlants.setAdapter(plantsAdapter);
-        endlessListViewPlants.setOnItemClickListener(this);
+        endlessGridViewPlants = (EndlessGridView) rootView.findViewById(R.id.endlessListViewPlants);
+        endlessGridViewPlants.setAdapter(plantsAdapter);
+        endlessGridViewPlants.setOnItemClickListener(this);
         
         requestPlantsArray();
 
@@ -68,7 +69,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         public void onSuccess(ArrayList<Plant> plants) {
             showProgress(false);
             plantsAdapter = new PlantAdapter(getActivity(), plants);
-            endlessListViewPlants.setAdapter(plantsAdapter);
+            endlessGridViewPlants.setAdapter(plantsAdapter);
         }
 
         @Override
@@ -85,6 +86,6 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     }
 
     private void showProgress(boolean show) {
-        endlessListViewPlants.setLoading(show);
+        endlessGridViewPlants.setLoading(show);
     }
 }
