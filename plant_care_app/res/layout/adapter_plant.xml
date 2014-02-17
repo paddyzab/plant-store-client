@@ -11,7 +11,8 @@
         android:layout_alignParentTop="true"
         android:layout_height="152dp"
         android:layout_width="152dp"
-        android:src="@android:color/holo_green_dark"/>
+        android:src="@android:color/holo_green_dark"
+        android:contentDescription="@string/accessibilityImageViewPlant"/>
 
     <LinearLayout android:id="@+id/ll_name_fields"
             android:layout_width="match_parent"

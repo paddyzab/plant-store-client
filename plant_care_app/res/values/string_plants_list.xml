@@ -2,5 +2,6 @@
 <resources>
 
     <string name="error_message">something went wrong: %s</string>
+    <string name="accessibilityImageViewPlant">Simplified image of the plant.</string>
 
 </resources>
