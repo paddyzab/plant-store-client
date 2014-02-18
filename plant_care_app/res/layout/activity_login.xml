@@ -41,35 +41,23 @@
 
             <EditText
                 android:id="@+id/email"
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="16dp"
                 android:inputType="textEmailAddress"
                 android:hint="@string/prompt_email"
                 android:layout_centerVertical="true"
-                android:background="@drawable/background_edit_text"
                 android:layout_below="@id/imageViewLogo"
-                android:paddingLeft="8dp"
-                android:textColorHint="@android:color/white"
-                android:textColor="@android:color/white"/>
+                android:layout_marginTop="8dp"
+                style="@style/EditTextLogin"/>
 
             <EditText
                 android:id="@+id/password"
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="8dp"
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeActionId="@+id/login"
                 android:imeOptions="actionUnspecified"
                 android:layout_below="@id/email"
-                android:background="@drawable/background_edit_text"
-                android:paddingLeft="8dp"
-                android:textColorHint="@android:color/white"
-                android:textColor="@android:color/white"/>
+                style="@style/EditTextLogin"
+                />
 
             <Button android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
