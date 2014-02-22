@@ -83,5 +83,9 @@
             <id>OSS Sonatype</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>plant_store_sdk_repo</id>
+            <url>https://github.com/mkorszun/plant_store_sdk/raw/master/repo</url>
+        </repository>
     </repositories>
 </project>
