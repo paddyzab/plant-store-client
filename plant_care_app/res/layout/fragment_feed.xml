@@ -14,5 +14,6 @@
                 android:paddingTop="@dimen/padding_double"
                 android:paddingBottom="@dimen/padding_double"
                 android:clipToPadding="false"
-                android:numColumns="1"/>
+                android:numColumns="1"
+                android:listSelector="@android:color/transparent"/>
 </RelativeLayout>
