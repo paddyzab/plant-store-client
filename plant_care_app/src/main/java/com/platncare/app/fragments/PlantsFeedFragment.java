@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import model.Plant;
 import java.util.ArrayList;
 
 public class PlantsFeedFragment extends Fragment implements OnItemClickListener {
+
+    private final static String TAG = PlantsFeedFragment.class.getSimpleName();
 
     private EndlessGridView endlessGridViewPlants;
     private PlantAdapter plantsAdapter;
@@ -44,12 +47,26 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         readExtras();
 
         endlessGridViewPlants = (EndlessGridView) rootView.findViewById(R.id.endlessListViewPlants);
-        endlessGridViewPlants.setAdapter(plantsAdapter);
         endlessGridViewPlants.setOnItemClickListener(this);
-        
-        requestPlantsArray();
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if(plantsAdapter != null) {
+            if(plantsAdapter.isEmpty()) {
+                endlessGridViewPlants.setAdapter(plantsAdapter);
+                requestPlantsArray();
+            } else {
+                endlessGridViewPlants.setAdapter(plantsAdapter);
+            }
+        } else {
+            requestPlantsArray();
+            endlessGridViewPlants.setAdapter(plantsAdapter);
+        }
     }
 
     @Override
@@ -84,8 +101,11 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         @Override
         public void onFailure(Exception e) {
             showProgress(false);
-            Toast.makeText(getActivity(), String.format(getString(R.string.error_message), e.getMessage()),
+            Toast.makeText(getActivity(), "Something went wrong.",
                     Toast.LENGTH_LONG).show();
+
+            Log.e(TAG, String.format("Error on failure, message /n %s", e.getMessage()));
+            Log.e(TAG, String.format("Error on failure, stacktrace /n %s", e.getStackTrace()));
         }
     };
 
