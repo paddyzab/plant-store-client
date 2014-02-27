@@ -34,9 +34,14 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
             holder.imageViewPlant = (ImageView) rowView.findViewById(R.id.imageViewPlant);
             holder.textViewPlantName = (TextView) rowView.findViewById(R.id.textViewPlantName);
             holder.textViewLatin = (TextView) rowView.findViewById(R.id.textViewLatin);
+            holder.imageViewInsolation = (ImageView) rowView.findViewById(R.id.imageViewInsolation);
+            holder.imageViewWatering = (ImageView) rowView.findViewById(R.id.imageViewWatering);
+            holder.imageViewHumidity = (ImageView) rowView.findViewById(R.id.imageViewHumidity);
 
             rowView.setTag(holder);
         }
+
+        //TODO: connect treatment images to correct backend treatment values.
 
         PlantHolder holder = (PlantHolder) rowView.getTag();
         holder.textViewPlantName.setText(getItem(position).getName().toUpperCase());
@@ -49,5 +54,8 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
         public ImageView imageViewPlant;
         public TextView textViewPlantName;
         public TextView textViewLatin;
+        public ImageView imageViewInsolation;
+        public ImageView imageViewHumidity;
+        public ImageView imageViewWatering;
     }
 }

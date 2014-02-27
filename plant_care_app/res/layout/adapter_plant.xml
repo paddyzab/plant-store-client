@@ -41,9 +41,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/imageViewPlant"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
+            android:gravity="right"
             >
+
+        <ImageView android:id="@+id/imageViewInsolation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/insolation_direct"
+                />
+
+        <ImageView android:id="@+id/imageViewWatering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/watering_low"
+                />
+        <ImageView android:id="@+id/imageViewHumidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/humidity_min"
+                />
 
     </LinearLayout>
 
