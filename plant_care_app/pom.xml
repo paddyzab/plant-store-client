@@ -29,7 +29,6 @@
             <artifactId>android</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>plant_store_sdk</groupId>
             <artifactId>plant_store_sdk</artifactId>
