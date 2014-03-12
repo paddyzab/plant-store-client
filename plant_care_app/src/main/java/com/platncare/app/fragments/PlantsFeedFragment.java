@@ -18,7 +18,7 @@ import com.platncare.app.backend.GetPlantsListAsyncTask;
 import com.platncare.app.backend.GetPlantsListExecutor;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.views.EndlessGridView;
-import model.Plant;
+import client.model.Plant;
 
 import java.util.ArrayList;
 

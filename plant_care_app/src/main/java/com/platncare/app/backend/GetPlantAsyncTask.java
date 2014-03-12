@@ -2,13 +2,10 @@ package com.platncare.app.backend;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import client.endpoint.PlantEndpoint;
-import client.http.exception.HTTPClientException;
+import client.model.Plant;
 import com.platncare.app.utils.Preferences;
-import model.Plant;
 
-import java.io.IOException;
 
 public class GetPlantAsyncTask extends AsyncTask<Object, Void, Plant> {
 

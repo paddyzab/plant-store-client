@@ -27,7 +27,7 @@ import com.throrinstudio.android.common.libs.validator.Form;
 import com.throrinstudio.android.common.libs.validator.Validate;
 import com.throrinstudio.android.common.libs.validator.validator.EmailValidator;
 import com.throrinstudio.android.common.libs.validator.validator.NotEmptyValidator;
-import model.Token;
+import client.model.Token;
 
 
 public class LoginActivity extends Activity implements OnClickListener {

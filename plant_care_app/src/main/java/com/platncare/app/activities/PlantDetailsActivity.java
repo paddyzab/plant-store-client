@@ -17,7 +17,7 @@ import com.platncare.app.fragments.PlantDetailsFragment;
 import com.platncare.app.nfc.MimeType;
 import com.platncare.app.utils.FragmentUtils;
 import com.platncare.app.utils.IntentKeys;
-import model.Plant;
+import client.model.Plant;
 
 import java.nio.ByteBuffer;
 

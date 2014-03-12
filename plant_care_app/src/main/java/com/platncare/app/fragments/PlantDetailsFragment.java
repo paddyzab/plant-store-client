@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.platncare.app.R;
-import model.Plant;
+import client.model.Plant;
 
 public class PlantDetailsFragment extends Fragment {
 

@@ -30,7 +30,7 @@
         <!-- External versions -->
         <android.version>4.0.3_r3</android.version>
         <picasso.version>2.1.1</picasso.version>
-        <plant_store_sdk.version>0.0.6</plant_store_sdk.version>
+        <plant_store_sdk.version>0.0.8</plant_store_sdk.version>
     </properties>
 
     <dependencyManagement>

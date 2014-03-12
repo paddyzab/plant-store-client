@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.platncare.app.R;
-import model.Plant;
+import client.model.Plant;
 
 import java.util.ArrayList;
 

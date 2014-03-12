@@ -50,6 +50,10 @@
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.okrest</groupId>
+                    <artifactId>okrest</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

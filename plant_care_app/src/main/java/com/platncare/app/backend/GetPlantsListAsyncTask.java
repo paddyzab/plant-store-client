@@ -2,7 +2,7 @@ package com.platncare.app.backend;
 
 import android.os.AsyncTask;
 import client.endpoint.PlantEndpoint;
-import model.Plant;
+import client.model.Plant;
 
 import java.util.ArrayList;
 
