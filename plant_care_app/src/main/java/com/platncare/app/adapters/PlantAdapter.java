@@ -1,6 +1,7 @@
 package com.platncare.app.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class PlantAdapter extends ArrayAdapter<Plant> {
 
     Context context;
+    private static final String TAG = PlantAdapter.class.getSimpleName();
 
     public PlantAdapter(Context context, ArrayList<Plant> plants) {
         super(context, R.layout.adapter_plant, plants);
