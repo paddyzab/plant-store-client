@@ -72,7 +72,7 @@
 
 
 
-            <LinearLayout android:id="@+id/social_buttons_container"
+            <RelativeLayout android:id="@+id/social_buttons_container"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="8dp"
@@ -80,26 +80,29 @@
                           android:layout_below="@id/sign_in_button"
                           android:gravity="bottom">
 
-                <Button android:id="@+id/buttonFacebook"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.14"
-                        android:layout_height="48dp"
-                        android:background="@drawable/button_facebook"/>
-
                 <Button android:id="@+id/buttonTwitter"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.14"
+                        android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/button_twitter"
-                        android:layout_marginLeft="4dp"/>
+                        android:layout_marginLeft="4dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="12dp"
+                        />
+
+                <Button android:id="@+id/buttonFacebook"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/button_facebook"
+                        android:layout_toLeftOf="@id/buttonTwitter"
+                        android:layout_marginRight="12dp"/>
 
                 <Button android:id="@+id/buttonGooglePlus"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.14"
+                        android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/button_google"
-                        android:layout_marginLeft="4dp"/>
-            </LinearLayout>
+                        android:layout_marginLeft="4dp"
+                        android:layout_toRightOf="@id/buttonTwitter"/>
+            </RelativeLayout>
 
         </RelativeLayout>
 </merge>
