@@ -14,6 +14,7 @@ public class FeedActivity extends Activity {
 
 
     private String token;
+    private PlantsFeedFragment plantsFeedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,9 @@ public class FeedActivity extends Activity {
     }
 
     private void refreshPlantsList() {
-
+        if (plantsFeedFragment != null) {
+            plantsFeedFragment .requestPlantsArray();
+        }
     }
 
     private void startLogout() {
@@ -68,7 +71,7 @@ public class FeedActivity extends Activity {
     }
 
     private void attachInitialFragment() {
-        PlantsFeedFragment plantsFeedFragment = PlantsFeedFragment.newInstance(token);
+        plantsFeedFragment = PlantsFeedFragment.newInstance(token);
         FragmentUtils.setFragment(this, plantsFeedFragment, R.id.frameLayoutContainer);
     }
 }

@@ -85,7 +85,8 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     }
 
 
-    private void requestPlantsArray() {
+    public void requestPlantsArray() {
+        showProgress(true);
         new GetPlantsListAsyncTask(executor).execute(stringToken);
     }
 
