@@ -44,6 +44,8 @@ public class LoginActivity extends Activity implements OnClickListener {
     private Button buttonTwitter;
     private Button signInButton;
 
+    //TODO 1: persist data on configguration change
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

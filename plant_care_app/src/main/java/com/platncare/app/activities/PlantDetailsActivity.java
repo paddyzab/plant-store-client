@@ -8,8 +8,10 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.platncare.app.R;
 import com.platncare.app.backend.GetPlantAsyncTask;
 import com.platncare.app.backend.GetPlantExecutor;
@@ -22,6 +24,8 @@ import client.model.Plant;
 import java.nio.ByteBuffer;
 
 public class PlantDetailsActivity extends Activity {
+
+    private final static String LOG_TAG = PlantDetailsActivity.class.getSimpleName();
 
     private ActionBar actionBar;
     private Plant plant;
@@ -84,7 +88,8 @@ public class PlantDetailsActivity extends Activity {
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    Log.e(LOG_TAG, "we cannot fetch data, because: " + e);
+                    Toast.makeText(PlantDetailsActivity.this, "Something went wrong, try again.", Toast.LENGTH_LONG).show();
                 }
             });
             getPlantAsyncTask.execute(this, getPlantIdFromNDEFMessage());
