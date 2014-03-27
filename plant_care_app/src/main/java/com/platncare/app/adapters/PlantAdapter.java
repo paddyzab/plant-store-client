@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.platncare.app.R;
 import client.model.Plant;
 
+import com.platncare.app.backend.models.Humidity;
+import com.platncare.app.backend.models.Insolation;
+import com.platncare.app.backend.models.Watering;
 import java.util.ArrayList;
 
 public class PlantAdapter extends ArrayAdapter<Plant> {
@@ -43,11 +46,54 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
             rowView.setTag(holder);
         }
 
-        //TODO: connect treatment images to correct backend treatment values.
-
         PlantHolder holder = (PlantHolder) rowView.getTag();
         holder.textViewPlantName.setText(getItem(position).getName().toUpperCase());
         holder.textViewLatin.setText(getItem(position).getKind().getLatinName());
+
+
+        Humidity humidity = Humidity.fromString(getItem(position).getKind().getTreatment().getHumidity());
+        Insolation insolation = Insolation.fromString(getItem(position).getKind().getTreatment().getInsolation());
+        Watering wateringSeason = Watering.fromString(getItem(position).getKind().getTreatment().getWateringSeason());
+
+        switch (wateringSeason) {
+            case FUGAL:
+                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_low));
+                break;
+            case MODERATE:
+                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_mid));
+                break;
+            case PLENTIFUL:
+                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_max));
+                break;
+        }
+
+        switch (humidity) {
+            case LOW:
+                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_min));
+                break;
+
+            case MODERATE:
+                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_mid));
+                break;
+
+            case HGH:
+                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_max));
+                break;
+        }
+
+        switch (insolation) {
+            case FULL:
+                holder.imageViewInsolation.setImageDrawable(context.getResources().getDrawable(R.drawable.insolation_direct));
+                break;
+
+            case INDIRECT:
+                holder.imageViewInsolation.setImageDrawable(context.getResources().getDrawable(R.drawable.insolation_partly_couded));
+                break;
+
+            case PARTIALLY_SHADED:
+                holder.imageViewInsolation.setImageDrawable(context.getResources().getDrawable(R.drawable.insolation_shadowed));
+                break;
+        }
 
         return rowView;
     }
