@@ -90,10 +90,16 @@
             <RelativeLayout android:layout_width="wrap_content"
                             android:layout_height="match_parent">
 
-                <ImageView android:id="@+id/imageViewTemperature"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/placeholder"/>
+                <TextView android:id="@+id/textViewTemperatureMax"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textColor="@android:color/holo_red_dark"/>
+
+                <TextView android:id="@+id/textViewTemperatureMin"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textColor="@android:color/holo_blue_dark"
+                          android:layout_below="@id/textViewTemperatureMax"/>
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
