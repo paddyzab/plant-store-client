@@ -5,13 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.platncare.app.R;
 import client.model.Plant;
-import java.awt.Image;
 
 public class PlantDetailsFragment extends Fragment {
 
@@ -20,7 +16,7 @@ public class PlantDetailsFragment extends Fragment {
     private Plant plant;
     ImageView imageViewWatering;
     ImageView imageViewInsolation;
-    ImageView imageViewFertiliser;
+    ImageView imageViewHumidity;
     ImageView imageViewTemperature;
 
     private static final String PLANT_KEY = "plant";
@@ -45,7 +41,7 @@ public class PlantDetailsFragment extends Fragment {
 
         imageViewWatering = (ImageView) rootView.findViewById(R.id.imageViewWatering);
         imageViewInsolation = (ImageView) rootView.findViewById(R.id.imageViewInsolation);
-        imageViewFertiliser = (ImageView) rootView.findViewById(R.id.imageViewFertilizer);
+        imageViewHumidity = (ImageView) rootView.findViewById(R.id.imageViewHumidity);
         imageViewTemperature = (ImageView) rootView.findViewById(R.id.imageViewTemperature);
 
         readExtras();
@@ -63,6 +59,6 @@ public class PlantDetailsFragment extends Fragment {
     private void populatePlantData() {
         imageViewWatering.setImageDrawable(getResources().getDrawable(R.drawable.watering_max));
         imageViewInsolation.setImageDrawable(getResources().getDrawable(R.drawable.insolation_direct));
-        imageViewFertiliser.setImageDrawable(getResources().getDrawable(R.drawable.humidity_max));
+        imageViewHumidity.setImageDrawable(getResources().getDrawable(R.drawable.humidity_max));
     }
 }
