@@ -1,7 +1,6 @@
 package com.platncare.app.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 public class PlantAdapter extends ArrayAdapter<Plant> {
 
     Context context;
-    private static final String TAG = PlantAdapter.class.getSimpleName();
 
     public PlantAdapter(Context context, ArrayList<Plant> plants) {
         super(context, R.layout.adapter_plant, plants);
@@ -50,37 +48,14 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
         holder.textViewPlantName.setText(getItem(position).getName().toUpperCase());
         holder.textViewLatin.setText(getItem(position).getKind().getLatinName());
 
+        setWateringDrawable(holder, Watering.fromString(getItem(position).getKind().getTreatment().getWateringSeason()));
+        stHumidityDrawable(holder, Humidity.fromString(getItem(position).getKind().getTreatment().getHumidity()));
+        setInsolationDrawable(holder, Insolation.fromString(getItem(position).getKind().getTreatment().getInsolation()));
 
-        Humidity humidity = Humidity.fromString(getItem(position).getKind().getTreatment().getHumidity());
-        Insolation insolation = Insolation.fromString(getItem(position).getKind().getTreatment().getInsolation());
-        Watering wateringSeason = Watering.fromString(getItem(position).getKind().getTreatment().getWateringSeason());
+        return rowView;
+    }
 
-        switch (wateringSeason) {
-            case FUGAL:
-                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_low));
-                break;
-            case MODERATE:
-                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_mid));
-                break;
-            case PLENTIFUL:
-                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_max));
-                break;
-        }
-
-        switch (humidity) {
-            case LOW:
-                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_min));
-                break;
-
-            case MODERATE:
-                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_mid));
-                break;
-
-            case HGH:
-                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_max));
-                break;
-        }
-
+    private void setInsolationDrawable(PlantHolder holder, Insolation insolation) {
         switch (insolation) {
             case FULL:
                 holder.imageViewInsolation.setImageDrawable(context.getResources().getDrawable(R.drawable.insolation_direct));
@@ -94,8 +69,36 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
                 holder.imageViewInsolation.setImageDrawable(context.getResources().getDrawable(R.drawable.insolation_shadowed));
                 break;
         }
+    }
 
-        return rowView;
+    private void stHumidityDrawable(PlantHolder holder, Humidity humidity) {
+        switch (humidity) {
+            case LOW:
+                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_min));
+                break;
+
+            case MODERATE:
+                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_mid));
+                break;
+
+            case HGH:
+                holder.imageViewHumidity.setImageDrawable(context.getResources().getDrawable(R.drawable.humidity_max));
+                break;
+        }
+    }
+
+    private void setWateringDrawable(PlantHolder holder, Watering wateringSeason) {
+        switch (wateringSeason) {
+            case FUGAL:
+                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_low));
+                break;
+            case MODERATE:
+                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_mid));
+                break;
+            case PLENTIFUL:
+                holder.imageViewWatering.setImageDrawable(context.getResources().getDrawable(R.drawable.watering_max));
+                break;
+        }
     }
 
     static class PlantHolder {
