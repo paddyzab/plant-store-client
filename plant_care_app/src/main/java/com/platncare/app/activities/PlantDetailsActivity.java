@@ -116,7 +116,7 @@ public class PlantDetailsActivity extends Activity {
     }
 
     private void initFragments() {
-        PlantDetailsFragment plantDetailsFragment = new PlantDetailsFragment();
+        PlantDetailsFragment plantDetailsFragment = PlantDetailsFragment.newInstance(plant);
         FragmentUtils.setFragment(this, plantDetailsFragment, R.id.fragment_container);
     }
 

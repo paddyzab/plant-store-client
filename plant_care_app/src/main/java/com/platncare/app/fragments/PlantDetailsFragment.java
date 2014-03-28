@@ -8,21 +8,20 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.platncare.app.R;
 import client.model.Plant;
+import java.awt.Image;
 
 public class PlantDetailsFragment extends Fragment {
 
     private static final String LOG_TAG = PlantDetailsFragment.class.getSimpleName();
 
-    private TextView textViewPlant;
-    private ImageView imageViewPlant;
     private Plant plant;
-    private FrameLayout frameLayoutWatering;
-    private FrameLayout frameLayoutSun;
-    private FrameLayout frameLayoutFertiliser;
-    private FrameLayout frameLayoutTemperature;
-
+    ImageView imageViewWatering;
+    ImageView imageViewInsolation;
+    ImageView imageViewFertiliser;
+    ImageView imageViewTemperature;
 
     private static final String PLANT_KEY = "plant";
 
@@ -36,15 +35,34 @@ public class PlantDetailsFragment extends Fragment {
         return fragment;
     }
 
+    private PlantDetailsFragment() {
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_plant_details, container, false);
 
-        frameLayoutWatering = (FrameLayout) rootView.findViewById(R.id.frameLayoutWatering);
-        frameLayoutSun = (FrameLayout) rootView.findViewById(R.id.frameLayoutSun);
-        frameLayoutFertiliser = (FrameLayout) rootView.findViewById(R.id.frameLayoutFertiliser);
-        frameLayoutTemperature = (FrameLayout) rootView.findViewById(R.id.frameLayoutTemperature);
+        imageViewWatering = (ImageView) rootView.findViewById(R.id.imageViewWatering);
+        imageViewInsolation = (ImageView) rootView.findViewById(R.id.imageViewInsolation);
+        imageViewFertiliser = (ImageView) rootView.findViewById(R.id.imageViewFertilizer);
+        imageViewTemperature = (ImageView) rootView.findViewById(R.id.imageViewTemperature);
+
+        readExtras();
+        populatePlantData();
 
         return rootView;
+    }
+
+    private void readExtras() {
+        Bundle args = getArguments();
+        Plant plant = (Plant) args.get(PLANT_KEY);
+        this.plant = plant;
+    }
+
+    private void populatePlantData() {
+        imageViewWatering.setImageDrawable(getResources().getDrawable(R.drawable.watering_max));
+        imageViewInsolation.setImageDrawable(getResources().getDrawable(R.drawable.insolation_direct));
+        imageViewFertiliser.setImageDrawable(getResources().getDrawable(R.drawable.humidity_max));
     }
 }
