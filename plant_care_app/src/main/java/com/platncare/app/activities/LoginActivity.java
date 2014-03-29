@@ -32,16 +32,17 @@ import client.model.Token;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
-    private EditText emailView;
-    private EditText passwordView;
-    private View loginFormView;
-    private View loginStatusView;
-    private TextView loginStatusMessageView;
+    private EditText editTextEmail;
+    private EditText editTextPassword;
+    private View relativeLayoutLoginForm;
+    private View linearLayoutLoginStatus;
+    private TextView textViewMessageView;
     private String stringToken;
     private Form validationForm;
-    private Button signInButton;
+    private Button buttonSignIn;
 
-    //TODO 1: persist data on configguration change
+    private static final String EMAILKEY = "EMAIL_KEY";
+    private static final String PASSWORDKEY = "PASSWORD_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +53,48 @@ public class LoginActivity extends Activity implements OnClickListener {
         initializeViews();
         initializeListeners();
         createValidationForm();
+
+        if(savedInstanceState != null) {
+            editTextEmail.setText(savedInstanceState.getString(EMAILKEY));
+            editTextPassword.setText(savedInstanceState.getString(PASSWORDKEY));
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.sign_in_button:
+                attemptLogin();
+                break;
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EMAILKEY, editTextEmail.getText().toString());
+        outState.putString(PASSWORDKEY, editTextPassword.getText().toString());
     }
 
     private void initializeViews() {
-        emailView = (EditText) findViewById(R.id.email);
-        passwordView = (EditText) findViewById(R.id.password);
-        passwordView.setOnEditorActionListener(passwordOnEditorActionListener);
-        loginFormView = findViewById(R.id.login_form);
-        loginStatusView = findViewById(R.id.login_status);
-        loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-        signInButton = (Button) findViewById(R.id.sign_in_button);
+        editTextEmail = (EditText) findViewById(R.id.email);
+        editTextPassword = (EditText) findViewById(R.id.password);
+        editTextPassword.setOnEditorActionListener(passwordOnEditorActionListener);
+        relativeLayoutLoginForm = findViewById(R.id.login_form);
+        linearLayoutLoginStatus = findViewById(R.id.login_status);
+        textViewMessageView = (TextView) findViewById(R.id.login_status_message);
+        buttonSignIn = (Button) findViewById(R.id.sign_in_button);
     }
 
     private void initializeListeners() {
-        signInButton.setOnClickListener(this);
+        buttonSignIn.setOnClickListener(this);
     }
 
     private void createValidationForm() {
-        Validate emailField = new Validate(emailView);
-        Validate passwordField = new Validate(passwordView);
+        Validate emailField = new Validate(editTextEmail);
+        Validate passwordField = new Validate(editTextPassword);
 
         emailField.addValidator(new NotEmptyValidator(LoginActivity.this));
         emailField.addValidator(new EmailValidator(LoginActivity.this));
@@ -98,17 +122,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.sign_in_button:
-                attemptLogin();
-                break;
-        }
-
-    }
-
     /**
      * Attempts to sign in or register the account specified by the login validationForm.
      * If there are validationForm errors (invalid email, missing fields, etc.), the
@@ -116,14 +129,14 @@ public class LoginActivity extends Activity implements OnClickListener {
      */
     public void attemptLogin() {
 
-        emailView.setError(null);
-        passwordView.setError(null);
+        editTextEmail.setError(null);
+        editTextPassword.setError(null);
 
         if(validationForm.validate()) {
-            String email = emailView.getText().toString();
-            String password = passwordView.getText().toString();
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
 
-            loginStatusMessageView.setText(R.string.login_progress_signing_in);
+            textViewMessageView.setText(R.string.login_progress_signing_in);
             hideKeyboard();
 
             showProgress(true);
@@ -162,32 +175,32 @@ public class LoginActivity extends Activity implements OnClickListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            loginStatusView.setVisibility(View.VISIBLE);
-            loginStatusView.animate()
+            linearLayoutLoginStatus.setVisibility(View.VISIBLE);
+            linearLayoutLoginStatus.animate()
                     .setDuration(shortAnimTime)
                     .alpha(show ? 1 : 0)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+                            linearLayoutLoginStatus.setVisibility(show ? View.VISIBLE : View.GONE);
                         }
                     });
 
-            loginFormView.setVisibility(View.VISIBLE);
-            loginFormView.animate()
+            relativeLayoutLoginForm.setVisibility(View.VISIBLE);
+            relativeLayoutLoginForm.animate()
                     .setDuration(shortAnimTime)
                     .alpha(show ? 0 : 1)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                            relativeLayoutLoginForm.setVisibility(show ? View.GONE : View.VISIBLE);
                         }
                     });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            linearLayoutLoginStatus.setVisibility(show ? View.VISIBLE : View.GONE);
+            relativeLayoutLoginForm.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
