@@ -22,12 +22,11 @@
 
                 <ImageView android:id="@+id/imageViewWatering"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/placeholder"/>
+                        android:layout_height="wrap_content"/>
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="Watering"
+                          android:text="@string/label_watering"
                           android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
@@ -43,12 +42,11 @@
 
                 <ImageView android:id="@+id/imageViewInsolation"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/placeholder"/>
+                        android:layout_height="wrap_content"/>
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="Insolation"
+                          android:text="@string/label_insolation"
                           android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
@@ -67,16 +65,15 @@
                      android:layout_height="wrap_content">
 
             <RelativeLayout android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_cpatrykontent">
 
                 <ImageView android:id="@+id/imageViewHumidity"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/placeholder"/>
+                        android:layout_height="wrap_content"/>
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="Humidity"
+                          android:text="@string/label_humidity"
                           android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
@@ -103,7 +100,7 @@
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="Temperature"
+                          android:text="@string/label_temperature"
                           android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
