@@ -21,6 +21,7 @@
         <platform.apiLevel>15</platform.apiLevel>
         <release.flag>false</release.flag>
         <undeploy.flag>true</undeploy.flag>
+        <android_validator.version>1.0</android_validator.version>
     </properties>
 
     <dependencies>
@@ -64,7 +65,7 @@
         <dependency>
             <groupId>android-validator</groupId>
             <artifactId>android-validator</artifactId>
-            <version>1.0</version>
+            <version>${android_validator.version}</version>
             <type>apklib</type>
         </dependency>
     </dependencies>
