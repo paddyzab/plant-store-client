@@ -34,7 +34,6 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
             rowView = inflater.inflate(R.layout.adapter_plant, parent, false);
 
             PlantHolder holder = new PlantHolder();
-            holder.imageViewPlant = (ImageView) rowView.findViewById(R.id.imageViewPlant);
             holder.textViewPlantName = (TextView) rowView.findViewById(R.id.textViewPlantName);
             holder.textViewLatin = (TextView) rowView.findViewById(R.id.textViewLatin);
             holder.imageViewInsolation = (ImageView) rowView.findViewById(R.id.imageViewInsolation);

@@ -7,18 +7,10 @@
               android:padding="@dimen/padding_item"
               android:background="@drawable/list_selector">
 
-    <ImageView android:id="@+id/imageViewPlant"
-        android:layout_alignParentTop="true"
-        android:layout_height="152dp"
-        android:layout_width="152dp"
-        android:src="@android:color/holo_green_dark"
-        android:contentDescription="@string/accessibilityImageViewPlant"/>
-
     <LinearLayout android:id="@+id/ll_name_fields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/imageViewPlant"
             android:orientation="vertical"
             >
         <TextView android:id="@+id/textViewPlantName"
@@ -40,7 +32,6 @@
     <LinearLayout android:id="@+id/instructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/imageViewPlant"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             android:gravity="right"
