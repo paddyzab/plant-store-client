@@ -39,9 +39,6 @@ public class LoginActivity extends Activity implements OnClickListener {
     private TextView loginStatusMessageView;
     private String stringToken;
     private Form validationForm;
-    private Button buttonGooglePlus;
-    private Button buttonFacebook;
-    private Button buttonTwitter;
     private Button signInButton;
 
     //TODO 1: persist data on configguration change
@@ -64,16 +61,10 @@ public class LoginActivity extends Activity implements OnClickListener {
         loginFormView = findViewById(R.id.login_form);
         loginStatusView = findViewById(R.id.login_status);
         loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-        buttonGooglePlus = (Button) findViewById(R.id.buttonGooglePlus);
-        buttonFacebook = (Button) findViewById(R.id.buttonFacebook);
-        buttonTwitter = (Button) findViewById(R.id.buttonTwitter);
         signInButton = (Button) findViewById(R.id.sign_in_button);
     }
 
     private void initializeListeners() {
-        buttonGooglePlus.setOnClickListener(this);
-        buttonFacebook.setOnClickListener(this);
-        buttonTwitter.setOnClickListener(this);
         signInButton.setOnClickListener(this);
     }
 
@@ -111,16 +102,6 @@ public class LoginActivity extends Activity implements OnClickListener {
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.buttonGooglePlus:
-                //startFeedActivity();
-                break;
-            case R.id.buttonFacebook:
-                //startFeedActivity();
-                break;
-
-            case R.id.buttonTwitter:
-                //startFeedActivity();
-                break;
             case R.id.sign_in_button:
                 attemptLogin();
                 break;
@@ -174,9 +155,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
     };
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in

@@ -10,7 +10,6 @@
         android:gravity="center"
         android:orientation="vertical"
         android:background="@color/main_background">
-
         <ProgressBar style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,8 +22,6 @@
             android:layout_marginBottom="16dp"
             android:text="@string/login_progress_signing_in" />
     </LinearLayout>
-
-
         <RelativeLayout android:id="@+id/login_form"
             style="@style/LoginFormContainer"
             android:orientation="vertical"
@@ -38,14 +35,14 @@
                 android:src="@drawable/logo"
                 android:layout_marginRight="12dp"
                 />
-
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/imageViewLogo"
                     android:orientation="vertical"
-                    android:layout_centerVertical="true">
-
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="right">
                 <EditText
                         android:id="@+id/email"
                         android:layout_width="250dp"
@@ -54,7 +51,6 @@
                         android:inputType="textEmailAddress"
                         style="@style/EditTextLogin"
                         />
-
                 <EditText
                         android:id="@+id/password"
                         android:singleLine="true"
@@ -70,34 +66,6 @@
                         android:paddingLeft="32dp"
                         android:paddingRight="32dp"
                         android:background="@drawable/selector_button"/>
-
             </LinearLayout>
-
-            <LinearLayout android:id="@+id/social_buttons_container"
-                          android:layout_width="250dp"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="8dp"
-                          android:layout_alignParentBottom="true"
-                          android:layout_toRightOf="@id/imageViewLogo"
-                          android:gravity="center_horizontal">
-
-                <Button android:id="@+id/buttonFacebook"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/button_facebook"
-                        android:layout_marginRight="12dp"/>
-
-                <Button android:id="@+id/buttonTwitter"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/button_twitter"
-                        android:layout_marginRight="12dp"/>
-
-                <Button android:id="@+id/buttonGooglePlus"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/button_google"/>
-            </LinearLayout>
-
         </RelativeLayout>
 </merge>
