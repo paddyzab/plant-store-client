@@ -66,9 +66,8 @@ public class PlantDetailsFragment extends Fragment {
         imageViewInsolation.setImageDrawable(getResources().getDrawable(R.drawable.insolation_direct));
         imageViewHumidity.setImageDrawable(getResources().getDrawable(R.drawable.humidity_max));
 
-        //TODO: cast in a sane way
-        textViewTemperatureMax.setText("" + plant.getKind().getTreatment().getSeasonTempMax());
-        textViewTemperatureMin.setText("" + plant.getKind().getTreatment().getSeasonTempMin());
+        textViewTemperatureMax.setText(String.valueOf(plant.getKind().getTreatment().getSeasonTempMax()));
+        textViewTemperatureMin.setText(String.valueOf(plant.getKind().getTreatment().getSeasonTempMin()));
 
         setInsolationDrawable(imageViewInsolation, Insolation.fromString(plant.getKind().getTreatment().getInsolation()));
         setWateringDrawable(imageViewWatering, Watering.fromString(plant.getKind().getTreatment().getWateringSeason()));
