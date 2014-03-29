@@ -49,7 +49,7 @@ public class FeedActivity extends Activity {
 
     private void refreshPlantsList() {
         if (plantsFeedFragment != null) {
-            plantsFeedFragment .requestPlantsArray();
+            plantsFeedFragment.requestPlantsArray();
         }
     }
 

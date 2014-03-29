@@ -59,7 +59,6 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     @Override
     public void onStart() {
         super.onStart();
-        progressBarLoading.setVisibility(View.VISIBLE);
 
         if(plantsAdapter != null) {
             if(plantsAdapter.isEmpty()) {
@@ -122,6 +121,14 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     }
 
     private void showProgress(boolean show) {
+        clearAdapter();
         endlessGridViewPlants.setLoading(show);
+        progressBarLoading.setVisibility(View.VISIBLE);
+    }
+
+    private void clearAdapter() {
+        if(plantsAdapter != null) {
+            plantsAdapter.clear();
+        }
     }
 }
