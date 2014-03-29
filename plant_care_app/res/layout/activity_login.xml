@@ -32,12 +32,24 @@
             android:layout_height="match_parent"
             android:background="@color/main_background">
 
-            <ImageView android:id="@+id/imageViewLogo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/logo"
-                    android:layout_centerHorizontal="true"
-                    />
+            <EditText
+                android:id="@+id/email"
+                android:inputType="textEmailAddress"
+                android:hint="@string/prompt_email"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="8dp"
+                style="@style/EditTextLogin"
+                android:layout_alignParentTop="true"/>
+
+            <EditText
+                android:id="@+id/password"
+                android:hint="@string/prompt_password"
+                android:inputType="textPassword"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeActionId="@+id/login"
+                android:imeOptions="actionUnspecified"
+                style="@style/EditTextLogin"
+                android:layout_below="@id/email"/>
 
             <Button android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
@@ -47,25 +59,14 @@
                 android:paddingRight="32dp"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/selector_button"
-                android:layout_alignParentBottom="true"
-                />
-            <EditText
-                android:id="@+id/password"
-                android:hint="@string/prompt_password"
-                android:inputType="textPassword"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeActionId="@+id/login"
-                android:imeOptions="actionUnspecified"
-                style="@style/EditTextLogin"
-                android:layout_above="@id/sign_in_button"
-                />
-            <EditText
-                    android:id="@+id/email"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/prompt_email"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="8dp"
-                    style="@style/EditTextLogin"
-                    android:layout_above="@id/password"/>
+                android:layout_below="@id/password"/>
+
+            <ImageView android:id="@+id/imageViewLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"/>
+
         </RelativeLayout>
 </merge>
