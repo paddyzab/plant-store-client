@@ -6,13 +6,19 @@
     android:background="@color/main_background">
 
     <com.platncare.app.views.EndlessGridView
-            android:id="@+id/endlessListViewPlants"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/transparent"
-            android:paddingTop="@dimen/padding_double"
-            android:paddingBottom="@dimen/padding_double"
-            android:clipToPadding="false"
-            android:numColumns="2"/>
+        android:id="@+id/endlessListViewPlants"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/transparent"
+        android:paddingTop="@dimen/padding_double"
+        android:paddingBottom="@dimen/padding_double"
+        android:clipToPadding="false"
+        android:numColumns="2"/>
+
+    <ProgressBar android:id="@+id/progressBarLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>

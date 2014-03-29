@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.platncare.app.R;
 import com.platncare.app.activities.PlantDetailsActivity;
@@ -30,6 +31,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     private PlantAdapter plantsAdapter;
     private String stringToken;
     private Context context;
+    private ProgressBar progressBarLoading;
 
     public static PlantsFeedFragment newInstance(String stringToken) {
         PlantsFeedFragment fragment = new PlantsFeedFragment();
@@ -49,12 +51,15 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         endlessGridViewPlants = (EndlessGridView) rootView.findViewById(R.id.endlessListViewPlants);
         endlessGridViewPlants.setOnItemClickListener(this);
 
+        progressBarLoading = (ProgressBar) rootView.findViewById(R.id.progressBarLoading);
+
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        progressBarLoading.setVisibility(View.VISIBLE);
 
         if(plantsAdapter != null) {
             if(plantsAdapter.isEmpty()) {
@@ -97,6 +102,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
             showProgress(false);
             plantsAdapter = new PlantAdapter(context, plants);
             endlessGridViewPlants.setAdapter(plantsAdapter);
+            progressBarLoading.setVisibility(View.GONE);
         }
 
         @Override
