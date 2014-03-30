@@ -17,16 +17,14 @@ public class EndlessGridView extends GridView implements AbsListView.OnScrollLis
 
     public EndlessGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.setOnScrollListener(this);
     }
 
     public EndlessGridView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.setOnScrollListener(this);
+        this(context, attrs, 0);
     }
 
     public EndlessGridView(Context context) {
-        super(context);
+        this(context, null);
         this.setOnScrollListener(this);
     }
 

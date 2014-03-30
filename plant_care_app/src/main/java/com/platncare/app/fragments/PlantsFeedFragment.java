@@ -31,6 +31,8 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     private PlantAdapter plantsAdapter;
     private String stringToken;
     private Context context;
+
+    //TODO move this item to the EndlessGridView
     private ProgressBar progressBarLoading;
 
     public static PlantsFeedFragment newInstance(String stringToken) {

@@ -30,6 +30,7 @@ public class PlantDetailsActivity extends Activity {
     private ActionBar actionBar;
     private Plant plant;
     private GetPlantAsyncTask getPlantAsyncTask;
+    private static final String PLANT_KEY = "plant_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,13 @@ public class PlantDetailsActivity extends Activity {
 
         initActionBar();
 
-        populatePlantData(getIntent());
-        initFragments();
+        if(savedInstanceState != null) {
+            plant = (Plant) savedInstanceState.getSerializable(PLANT_KEY);
+            displayData(plant);
+            initFragments(plant);
+        } else {
+            populatePlantData();
+        }
     }
 
     protected void onPause() {
@@ -48,6 +54,12 @@ public class PlantDetailsActivity extends Activity {
         if(getPlantAsyncTask != null) {
             getPlantAsyncTask.cancel(true);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(PLANT_KEY, plant);
     }
 
     @Override
@@ -76,14 +88,19 @@ public class PlantDetailsActivity extends Activity {
         startActivity(intent);
     }
 
-    private void populatePlantData(Intent intent) {
+    private void populatePlantData() {
+
+        final Intent intent = getIntent();
 
         if(intent.getType() != null && intent.getType().equals(MimeType.PLANT_CARE_TYPE)) {
 
             getPlantAsyncTask = new GetPlantAsyncTask(new GetPlantExecutor() {
                 @Override
                 public void onSuccess(Plant plant) {
+                    PlantDetailsActivity.this.plant = plant;
+
                     displayData(plant);
+                    initFragments(plant);
                 }
 
                 @Override
@@ -97,6 +114,7 @@ public class PlantDetailsActivity extends Activity {
         } else if (intent.hasExtra(IntentKeys.PLANT_KEY)) {
             plant = (Plant) intent.getSerializableExtra(IntentKeys.PLANT_KEY);
             displayData(plant);
+            initFragments(plant);
         } else {
             throw new RuntimeException("Intent data are empty, this should not happen.");
         }
@@ -115,7 +133,7 @@ public class PlantDetailsActivity extends Activity {
         actionBar.setTitle(plant.getName());
     }
 
-    private void initFragments() {
+    private void initFragments(Plant plant) {
         PlantDetailsFragment plantDetailsFragment = PlantDetailsFragment.newInstance(plant);
         FragmentUtils.setFragment(this, plantDetailsFragment, R.id.fragment_container);
     }

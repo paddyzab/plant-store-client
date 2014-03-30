@@ -15,8 +15,6 @@ import com.platncare.app.backend.models.Watering;
 
 public class PlantDetailsFragment extends Fragment {
 
-    private static final String LOG_TAG = PlantDetailsFragment.class.getSimpleName();
-
     private Plant plant;
     private ImageView imageViewWatering;
     private ImageView imageViewInsolation;
@@ -34,10 +32,6 @@ public class PlantDetailsFragment extends Fragment {
 
         fragment.setArguments(args);
         return fragment;
-    }
-
-    private PlantDetailsFragment() {
-
     }
 
     @Override
