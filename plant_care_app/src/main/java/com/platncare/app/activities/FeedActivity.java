@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantsFeedFragment;
 import com.platncare.app.utils.FragmentUtils;
@@ -42,6 +43,7 @@ public class FeedActivity extends Activity {
                 break;
             case R.id.menu_logout:
                 startLogout();
+                Toast.makeText(FeedActivity.this, "logged out.", Toast.LENGTH_LONG).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

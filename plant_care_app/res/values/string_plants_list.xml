@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="error_message">something went wrong: %s</string>
-    <string name="accessibilityImageViewPlant">Simplified image of the plant.</string>
-
-</resources>
