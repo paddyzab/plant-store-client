@@ -43,7 +43,7 @@ public class FeedActivity extends Activity {
                 break;
             case R.id.menu_logout:
                 startLogout();
-                Toast.makeText(FeedActivity.this, "logged out.", Toast.LENGTH_LONG).show();
+                Toast.makeText(FeedActivity.this, R.string.toast_logout, Toast.LENGTH_LONG).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

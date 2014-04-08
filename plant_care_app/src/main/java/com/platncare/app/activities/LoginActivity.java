@@ -29,7 +29,6 @@ import com.throrinstudio.android.common.libs.validator.validator.EmailValidator;
 import com.throrinstudio.android.common.libs.validator.validator.NotEmptyValidator;
 import client.model.Token;
 
-
 public class LoginActivity extends Activity implements OnClickListener {
 
     private EditText editTextEmail;
@@ -53,11 +52,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         initializeViews();
         initializeListeners();
         createValidationForm();
-
-        if(savedInstanceState != null) {
-            editTextEmail.setText(savedInstanceState.getString(EMAILKEY));
-            editTextPassword.setText(savedInstanceState.getString(PASSWORDKEY));
-        }
+        retriveAndPopulateEditTexts(savedInstanceState);
     }
 
     @Override
@@ -76,6 +71,13 @@ public class LoginActivity extends Activity implements OnClickListener {
         super.onSaveInstanceState(outState);
         outState.putString(EMAILKEY, editTextEmail.getText().toString());
         outState.putString(PASSWORDKEY, editTextPassword.getText().toString());
+    }
+
+    private void retriveAndPopulateEditTexts(Bundle savedInstanceState) {
+        if(savedInstanceState != null) {
+            editTextEmail.setText(savedInstanceState.getString(EMAILKEY));
+            editTextPassword.setText(savedInstanceState.getString(PASSWORDKEY));
+        }
     }
 
     private void initializeViews() {
