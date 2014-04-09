@@ -6,6 +6,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,6 +48,10 @@ public class LoginActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        overridePendingTransition(R.anim.upin, R.anim.upout);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.TRANSPARENT);
+        getWindow().setBackgroundDrawable(colorDrawable);
 
         setContentView(R.layout.activity_login);
         prepareActionBar();
@@ -115,6 +121,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     protected void onResume() {
         super.onResume();
 
+        overridePendingTransition(R.anim.upin, R.anim.upout);
         String stringToken = Preferences.getAppToken(LoginActivity.this);
 
         //When we have token persisted just start FeedActivity
