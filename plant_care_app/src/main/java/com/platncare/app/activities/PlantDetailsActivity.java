@@ -77,8 +77,14 @@ public class PlantDetailsActivity extends Activity {
             case R.id.menu_save:
                 startWriteTagActivity();
                 break;
+            case R.id.menu_calendar:
+                startCalendarActivity();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startCalendarActivity() {
+
     }
 
     private void startWriteTagActivity() {
