@@ -16,14 +16,6 @@
     <packaging>apk</packaging>
     <name>Plantcare :: Android</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.apiLevel>15</platform.apiLevel>
-        <release.flag>false</release.flag>
-        <undeploy.flag>true</undeploy.flag>
-        <android_validator.version>1.0</android_validator.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>android</groupId>
@@ -71,7 +63,7 @@
         <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>android-times-square</artifactId>
-            <version>1.1.1</version>
+            <version>${time_square.version}</version>
             <type>apklib</type>
         </dependency>
     </dependencies>

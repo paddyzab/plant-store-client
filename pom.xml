@@ -19,6 +19,9 @@
         <!-- General -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.6</java.version>
+        <platform.apiLevel>17</platform.apiLevel>
+        <release.flag>false</release.flag>
+        <undeploy.flag>true</undeploy.flag>
 
         <!-- Plugins versions -->
         <android-maven-plugin.version>3.8.0</android-maven-plugin.version>
@@ -28,9 +31,11 @@
         <maven-jarsigner-plugin.version>1.2</maven-jarsigner-plugin.version>
 
         <!-- External versions -->
-        <android.version>4.0.3_r3</android.version>
+        <android.version>4.2.2_r2</android.version>
         <picasso.version>2.1.1</picasso.version>
         <plant_store_sdk.version>0.0.8</plant_store_sdk.version>
+        <android_validator.version>1.0</android_validator.version>
+        <time_square.version>1.1.1</time_square.version>
     </properties>
 
     <dependencyManagement>
