@@ -84,7 +84,10 @@ public class PlantDetailsActivity extends Activity {
     }
 
     private void startCalendarActivity() {
+        Intent intent = new Intent(PlantDetailsActivity.this, CalendarActivity.class);
+        intent.putExtra(IntentKeys.PLANT_KEY, plant);
 
+        startActivity(intent);
     }
 
     private void startWriteTagActivity() {
