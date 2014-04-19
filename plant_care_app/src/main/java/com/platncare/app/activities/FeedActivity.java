@@ -1,21 +1,21 @@
 package com.platncare.app.activities;
 
 import android.app.Activity;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.platncare.app.R;
 import com.platncare.app.fragments.PlantsFeedFragment;
 import com.platncare.app.utils.FragmentUtils;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
-import model.Token;
 
 public class FeedActivity extends Activity {
 
 
-    private Token token;
+    private String token;
+    private PlantsFeedFragment plantsFeedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +38,21 @@ public class FeedActivity extends Activity {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.menu_refresh:
+                refreshPlantsList();
+                break;
             case R.id.menu_logout:
                 startLogout();
+                Toast.makeText(FeedActivity.this, R.string.toast_logout, Toast.LENGTH_LONG).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshPlantsList() {
+        if (plantsFeedFragment != null) {
+            plantsFeedFragment.requestPlantsArray();
+        }
     }
 
     private void startLogout() {
@@ -53,17 +63,17 @@ public class FeedActivity extends Activity {
     private void getExtras() {
         Bundle args = getIntent().getExtras();
 
-        if(args != null) {
-            if(args.containsKey(IntentKeys.TOKEN_KEY)) {
-                token = (Token) args.getSerializable(IntentKeys.TOKEN_KEY);
+        if (args != null) {
+            if (args.containsKey(IntentKeys.TOKEN_KEY)) {
+                token = args.getString(IntentKeys.TOKEN_KEY);
             } else {
-               throw new RuntimeException("To initiate we need TokenKey.");
+                token = Preferences.getAppToken(this);
             }
         }
     }
 
     private void attachInitialFragment() {
-        PlantsFeedFragment plantsFeedFragment = PlantsFeedFragment.newInstance(token);
+        plantsFeedFragment = PlantsFeedFragment.newInstance(token);
         FragmentUtils.setFragment(this, plantsFeedFragment, R.id.frameLayoutContainer);
     }
 }

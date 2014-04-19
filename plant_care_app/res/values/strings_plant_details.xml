@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_watering">Watering</string>
+    <string name="label_insolation">Insolation</string>
+    <string name="label_humidity">Humidity</string>
+    <string name="label_temperature">Temperature</string>
+</resources>

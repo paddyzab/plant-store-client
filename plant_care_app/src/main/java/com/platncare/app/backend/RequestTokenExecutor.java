@@ -1,6 +1,6 @@
 package com.platncare.app.backend;
 
-import model.Token;
+import client.model.Token;
 
 public interface RequestTokenExecutor {
 

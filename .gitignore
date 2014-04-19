@@ -33,4 +33,5 @@ proguard/
 *.iws
 .idea/
 
-/build
+build
+target

@@ -1,6 +1,6 @@
 package com.platncare.app.backend;
 
-import model.Plant;
+import client.model.Plant;
 
 public interface GetPlantExecutor {
 
