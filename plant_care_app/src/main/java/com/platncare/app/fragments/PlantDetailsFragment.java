@@ -5,24 +5,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.platncare.app.R;
-import model.Plant;
+import client.model.Plant;
+import com.platncare.app.backend.models.Humidity;
+import com.platncare.app.backend.models.Insolation;
+import com.platncare.app.backend.models.Watering;
 
 public class PlantDetailsFragment extends Fragment {
 
-    private static final String LOG_TAG = PlantDetailsFragment.class.getSimpleName();
-
-    private TextView textViewPlant;
-    private ImageView imageViewPlant;
     private Plant plant;
-    private FrameLayout frameLayoutWatering;
-    private FrameLayout frameLayoutSun;
-    private FrameLayout frameLayoutFertiliser;
-    private FrameLayout frameLayoutTemperature;
-
+    private ImageView imageViewWatering;
+    private ImageView imageViewInsolation;
+    private ImageView imageViewHumidity;
+    private TextView textViewTemperatureMax;
+    private TextView textViewTemperatureMin;
 
     private static final String PLANT_KEY = "plant";
 
@@ -40,11 +38,80 @@ public class PlantDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_plant_details, container, false);
 
-        frameLayoutWatering = (FrameLayout) rootView.findViewById(R.id.frameLayoutWatering);
-        frameLayoutSun = (FrameLayout) rootView.findViewById(R.id.frameLayoutSun);
-        frameLayoutFertiliser = (FrameLayout) rootView.findViewById(R.id.frameLayoutFertiliser);
-        frameLayoutTemperature = (FrameLayout) rootView.findViewById(R.id.frameLayoutTemperature);
+        imageViewWatering = (ImageView) rootView.findViewById(R.id.imageViewWatering);
+        imageViewInsolation = (ImageView) rootView.findViewById(R.id.imageViewInsolation);
+        imageViewHumidity = (ImageView) rootView.findViewById(R.id.imageViewHumidity);
+        textViewTemperatureMax = (TextView) rootView.findViewById(R.id.textViewTemperatureMax);
+        textViewTemperatureMin = (TextView) rootView.findViewById(R.id.textViewTemperatureMin);
+
+        readExtras();
+        populatePlantData();
 
         return rootView;
+    }
+
+    private void readExtras() {
+        Bundle args = getArguments();
+        this.plant = (Plant) args.get(PLANT_KEY);
+    }
+
+    private void populatePlantData() {
+        imageViewWatering.setImageDrawable(getResources().getDrawable(R.drawable.watering_max));
+        imageViewInsolation.setImageDrawable(getResources().getDrawable(R.drawable.insolation_direct));
+        imageViewHumidity.setImageDrawable(getResources().getDrawable(R.drawable.humidity_max));
+
+        textViewTemperatureMax.setText(String.valueOf(plant.getKind().getTreatment().getSeasonTempMax()));
+        textViewTemperatureMin.setText(String.valueOf(plant.getKind().getTreatment().getSeasonTempMin()));
+
+        setInsolationDrawable(imageViewInsolation, Insolation.fromString(plant.getKind().getTreatment().getInsolation()));
+        setWateringDrawable(imageViewWatering, Watering.fromString(plant.getKind().getTreatment().getWateringSeason()));
+        stHumidityDrawable(imageViewHumidity, Humidity.fromString(plant.getKind().getTreatment().getHumidity()));
+    }
+
+    //TODO: Put this in models, or in localmodels - this is duplicated in the Adapter too.
+    private void setInsolationDrawable(ImageView imageView, Insolation insolation) {
+        switch (insolation) {
+            case FULL:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.insolation_direct));
+                break;
+
+            case INDIRECT:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.insolation_partly_couded));
+                break;
+
+            case PARTIALLY_SHADED:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.insolation_shadowed));
+                break;
+        }
+    }
+
+    private void stHumidityDrawable(ImageView imageView, Humidity humidity) {
+        switch (humidity) {
+            case LOW:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.humidity_min));
+                break;
+
+            case MODERATE:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.humidity_mid));
+                break;
+
+            case HGH:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.humidity_max));
+                break;
+        }
+    }
+
+    private void setWateringDrawable(ImageView imageView, Watering wateringSeason) {
+        switch (wateringSeason) {
+            case FUGAL:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.watering_low));
+                break;
+            case MODERATE:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.watering_mid));
+                break;
+            case PLENTIFUL:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.watering_max));
+                break;
+        }
     }
 }

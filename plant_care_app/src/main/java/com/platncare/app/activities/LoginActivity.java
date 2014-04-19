@@ -2,210 +2,175 @@ package com.platncare.app.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import client.endpoint.TokenEndpoint;
-import client.http.exception.HTTPClientException;
 import com.platncare.app.R;
 import com.platncare.app.backend.RequestTokenAsyncTask;
 import com.platncare.app.backend.RequestTokenExecutor;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
-import model.Token;
-
-import java.io.IOException;
+import com.throrinstudio.android.common.libs.validator.Form;
+import com.throrinstudio.android.common.libs.validator.Validate;
+import com.throrinstudio.android.common.libs.validator.validator.EmailValidator;
+import com.throrinstudio.android.common.libs.validator.validator.NotEmptyValidator;
+import client.model.Token;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
-    private String email;
-    private String password;
+    private EditText editTextEmail;
+    private EditText editTextPassword;
+    private View relativeLayoutLoginForm;
+    private View linearLayoutLoginStatus;
+    private TextView textViewMessageView;
+    private String stringToken;
+    private Form validationForm;
+    private Button buttonSignIn;
 
-    private EditText emailView;
-    private EditText passwordView;
-    private View loginFormView;
-    private View loginStatusView;
-    private TextView loginStatusMessageView;
-    private Token token;
-
-    private RequestTokenAsyncTask requestTokenAsyncTask;
+    private static final String EMAILKEY = "EMAIL_KEY";
+    private static final String PASSWORDKEY = "PASSWORD_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.up_in, R.anim.up_out);
 
         setContentView(R.layout.activity_login);
-
         prepareActionBar();
-
-        emailView = (EditText) findViewById(R.id.email);
-        emailView.setText(email);
-
-        passwordView = (EditText) findViewById(R.id.password);
-        passwordView.setOnEditorActionListener(passwordOnEditorActionListener);
-
-        loginFormView = findViewById(R.id.login_form);
-        loginStatusView = findViewById(R.id.login_status);
-        loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
-        Button buttonGooglePlus = (Button) findViewById(R.id.buttonGooglePlus);
-        Button buttonFacebook = (Button) findViewById(R.id.buttonFacebook);
-        Button buttonTwitter = (Button) findViewById(R.id.buttonTwitter);
-
-        buttonGooglePlus.setOnClickListener(this);
-        buttonFacebook.setOnClickListener(this);
-        buttonTwitter.setOnClickListener(this);
-
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        requestTokenAsyncTask = new RequestTokenAsyncTask(executor);
-    }
-
-    private RequestTokenExecutor executor = new RequestTokenExecutor() {
-
-        @Override
-        public void onSuccess(Token token) {
-            LoginActivity.this.token = token;
-            persistCredentials();
-            startFeedActivity();
-        }
-
-        @Override
-        public void onFailure(Exception e) {
-            passwordView.setError(getString(R.string.error_incorrect_password));
-            passwordView.requestFocus();
-
-            Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    };
-
-    protected void onPause() {
-        super.onPause();
-
-        if(requestTokenAsyncTask != null) {
-            requestTokenAsyncTask.cancel(true);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        email = Preferences.getEmail(LoginActivity.this);
-        password = Preferences.getPassword(LoginActivity.this);
-
-
-        if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-            loginStatusMessageView.setText(R.string.login_progress_signing_in);
-            showProgress(true);
-
-            requestTokenAsyncTask.execute(email, password);
-        }
+        initializeViews();
+        initializeListeners();
+        createValidationForm();
+        retriveAndPopulateEditTexts(savedInstanceState);
     }
 
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.buttonGooglePlus:
-                //startFeedActivity();
-                break;
-            case R.id.buttonFacebook:
-                //startFeedActivity();
-                break;
-
-            case R.id.buttonTwitter:
-                //startFeedActivity();
+            case R.id.sign_in_button:
+                attemptLogin();
                 break;
         }
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EMAILKEY, editTextEmail.getText().toString());
+        outState.putString(PASSWORDKEY, editTextPassword.getText().toString());
+    }
+
+    private void retriveAndPopulateEditTexts(Bundle savedInstanceState) {
+        if(savedInstanceState != null) {
+            editTextEmail.setText(savedInstanceState.getString(EMAILKEY));
+            editTextPassword.setText(savedInstanceState.getString(PASSWORDKEY));
+        }
+    }
+
+    private void initializeViews() {
+        editTextEmail = (EditText) findViewById(R.id.email);
+        editTextPassword = (EditText) findViewById(R.id.password);
+        editTextPassword.setOnEditorActionListener(passwordOnEditorActionListener);
+        relativeLayoutLoginForm = findViewById(R.id.login_form);
+        linearLayoutLoginStatus = findViewById(R.id.login_status);
+        textViewMessageView = (TextView) findViewById(R.id.login_status_message);
+        buttonSignIn = (Button) findViewById(R.id.sign_in_button);
+    }
+
+    private void initializeListeners() {
+        buttonSignIn.setOnClickListener(this);
+    }
+
+    private void createValidationForm() {
+        Validate emailField = new Validate(editTextEmail);
+        Validate passwordField = new Validate(editTextPassword);
+
+        emailField.addValidator(new NotEmptyValidator(LoginActivity.this));
+        emailField.addValidator(new EmailValidator(LoginActivity.this));
+        passwordField.addValidator(new NotEmptyValidator(LoginActivity.this));
+
+        validationForm = new Form();
+        validationForm.addValidates(emailField);
+        validationForm.addValidates(passwordField);
+    }
+
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.up_in, R.anim.up_out);
+        String stringToken = Preferences.getAppToken(LoginActivity.this);
+
+        //When we have token persisted just start FeedActivity
+        if(stringToken != null && !TextUtils.isEmpty(stringToken)) {
+            this.stringToken = stringToken;
+            startFeedActivity();
+        }
+    }
+
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
+     * Attempts to sign in or register the account specified by the login validationForm.
+     * If there are validationForm errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
 
-        emailView.setError(null);
-        passwordView.setError(null);
+        editTextEmail.setError(null);
+        editTextPassword.setError(null);
 
-        if(emailView.getText() != null) {
-            email = emailView.getText().toString();
-        }
-        if(passwordView.getText() != null) {
-            password = passwordView.getText().toString();
-        }
+        if(validationForm.validate()) {
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
 
-        boolean cancel = false;
-        View focusView = null;
+            textViewMessageView.setText(R.string.login_progress_signing_in);
+            hideKeyboard();
 
-        if (TextUtils.isEmpty(password)) {
-            passwordView.setError(getString(R.string.error_field_required));
-            focusView = passwordView;
-            cancel = true;
-        } else if (password.length() < 4) {
-            passwordView.setError(getString(R.string.error_invalid_password));
-            focusView = passwordView;
-            cancel = true;
-        }
-
-        if (TextUtils.isEmpty(email)) {
-            emailView.setError(getString(R.string.error_field_required));
-            focusView = emailView;
-            cancel = true;
-        } else if (!email.contains("@")) {
-            emailView.setError(getString(R.string.error_invalid_email));
-            focusView = emailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            requestTokenAsyncTask.execute(email, password);
+
+            new RequestTokenAsyncTask(executor).execute(email, password);
+        } else {
+            showProgress(false);
         }
     }
 
-    private void prepareActionBar() {
-        ActionBar actionBar = getActionBar();
-        if(actionBar != null) {
-            actionBar.hide();
-        }
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private RequestTokenExecutor executor = new RequestTokenExecutor() {
+
+        @Override
+        public void onSuccess(Token token) {
+            LoginActivity.this.stringToken = token.getToken();
+            Preferences.saveAppToken(stringToken, LoginActivity.this);
+            startFeedActivity();
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            showProgress(false);
+            Toast.makeText(LoginActivity.this, getString(R.string.toast_wrong_credentials), Toast.LENGTH_LONG).show();
+        }
+    };
+
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
@@ -213,38 +178,33 @@ public class LoginActivity extends Activity implements OnClickListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            loginStatusView.setVisibility(View.VISIBLE);
-            loginStatusView.animate()
+            linearLayoutLoginStatus.setVisibility(View.VISIBLE);
+            linearLayoutLoginStatus.animate()
                     .setDuration(shortAnimTime)
                     .alpha(show ? 1 : 0)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+                            linearLayoutLoginStatus.setVisibility(show ? View.VISIBLE : View.GONE);
                         }
                     });
 
-            loginFormView.setVisibility(View.VISIBLE);
-            loginFormView.animate()
+            relativeLayoutLoginForm.setVisibility(View.VISIBLE);
+            relativeLayoutLoginForm.animate()
                     .setDuration(shortAnimTime)
                     .alpha(show ? 0 : 1)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                            relativeLayoutLoginForm.setVisibility(show ? View.GONE : View.VISIBLE);
                         }
                     });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            linearLayoutLoginStatus.setVisibility(show ? View.VISIBLE : View.GONE);
+            relativeLayoutLoginForm.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
-
-    private void persistCredentials() {
-        Preferences.saveEmail(email, LoginActivity.this);
-        Preferences.savePassword(password, LoginActivity.this);
     }
 
     private TextView.OnEditorActionListener passwordOnEditorActionListener = new TextView.OnEditorActionListener() {
@@ -258,10 +218,17 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
     };
 
+    private void prepareActionBar() {
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null) {
+            actionBar.hide();
+        }
+    }
+
     private void startFeedActivity() {
         //Start FeedActivity after successful Login
         Intent intent = new Intent(LoginActivity.this, FeedActivity.class);
-        intent.putExtra(IntentKeys.TOKEN_KEY, token);
+        intent.putExtra(IntentKeys.TOKEN_KEY, stringToken);
         startActivity(intent);
 
         //Destroy this activity to remove it from the activity stack

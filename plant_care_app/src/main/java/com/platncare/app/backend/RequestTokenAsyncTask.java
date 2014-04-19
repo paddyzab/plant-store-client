@@ -2,7 +2,7 @@ package com.platncare.app.backend;
 
 import android.os.AsyncTask;
 import client.endpoint.TokenEndpoint;
-import model.Token;
+import client.model.Token;
 
 public class RequestTokenAsyncTask extends AsyncTask<Object, Void, Token> {
 

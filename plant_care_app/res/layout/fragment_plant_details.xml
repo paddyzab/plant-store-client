@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="2">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:weightSum="2"
+                  android:orientation="horizontal">
+
+        <FrameLayout android:id="@+id/frameLayoutWatering"
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content">
+
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                <ImageView android:id="@+id/imageViewWatering"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/label_watering"
+                          android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+        </FrameLayout>
+
+        <FrameLayout android:id="@+id/frameLayoutSun"
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content">
+
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                <ImageView android:id="@+id/imageViewInsolation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/label_insolation"
+                          android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:weightSum="2"
+                  android:orientation="horizontal">
+
+        <FrameLayout android:id="@+id/frameLayoutFertiliser"
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content">
+
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                <ImageView android:id="@+id/imageViewHumidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/label_humidity"
+                          android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+        </FrameLayout>
+
+        <FrameLayout android:id="@+id/frameLayoutTemperature"
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content">
+
+            <RelativeLayout android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                <TextView android:id="@+id/textViewTemperatureMax"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textColor="@android:color/holo_red_dark"/>
+
+                <TextView android:id="@+id/textViewTemperatureMin"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textColor="@android:color/holo_blue_dark"
+                          android:layout_below="@id/textViewTemperatureMax"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/label_temperature"
+                          android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

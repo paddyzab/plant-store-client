@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_background">#00a79e</color>
+    <color name="list_select">@android:color/transparent</color>
+    <color name="list_divider">@android:color/black</color>
+
+</resources>

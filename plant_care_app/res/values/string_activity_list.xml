@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="error_message">something went wrong: %s</string>
+    <string name="accessibilityImageViewPlant">Simplified image of the plant.</string>
+
+    <string name="toast_logout">You are logged out.</string>
+    <string name="menu_help">help</string>
+    <string name="menu_logout">logout</string>
+    <string name="menu_feedback">feedback</string>
+    <string name="menu_settings">settings</string>
+    <string name="menu_refresh">refresh</string>
+</resources>
