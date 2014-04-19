@@ -1,16 +1,13 @@
 language: java
 
 jdk:
-  - openjdk7
-  - openjdk6
   - oraclejdk7
-  - oraclejdk8
+
 
 branches:
   only:
     - develop
     - master
-    - feature/travis-ci
 
 env:
     matrix:
