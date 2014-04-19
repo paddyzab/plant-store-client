@@ -221,7 +221,6 @@ public class ScanTagActivity extends Activity {
         @Override
         public void onTick(long millisUntilFinished) {
             textViewCounter.setText("seconds remaining: " + millisUntilFinished / 1000);
-
         }
     }
 }

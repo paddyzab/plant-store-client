@@ -14,7 +14,6 @@ import com.platncare.app.utils.IntentKeys;
 //TODO a fragment only.
 public class CalendarActivity extends Activity {
 
-    private ActionBar actionBar;
     private Plant plant;
     private static final String PLANT_KEY = "plant_key";
 
@@ -53,13 +52,10 @@ public class CalendarActivity extends Activity {
     }
 
     private void displayData(Plant plant) {
-        actionBar.setTitle(plant.getName());
+        getActionBar().setTitle(plant.getName());
     }
 
     private void initActionBar() {
-        actionBar = getActionBar();
-        if(actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

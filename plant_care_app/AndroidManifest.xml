@@ -18,12 +18,16 @@
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
-            android:name=".activities.FeedActivity"
-            android:label="@string/app_name">
+            android:name=".activities.FeedActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
 
-        <activity android:name=".activities.PlantDetailsActivity">
+        <activity android:name=".activities.PlantDetailsActivity"
+            android:parentActivityName=".activities.FeedActivity">
             <!-- Handle a NDEF record -->
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
@@ -32,7 +36,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.ScanTagActivity"/>
+
 
         <activity
             android:name=".activities.LoginActivity"
@@ -45,6 +49,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.CalendarActivity"/>
+        <activity android:name=".activities.ScanTagActivity"
+                  android:parentActivityName=".activities.PlantDetailsActivity"/>
+
+        <activity android:name=".activities.CalendarActivity"
+                  android:parentActivityName=".activities.PlantDetailsActivity"/>>
     </application>
 </manifest>

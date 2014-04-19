@@ -1,6 +1,5 @@
 package com.platncare.app.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -27,7 +26,6 @@ public class PlantDetailsActivity extends Activity {
 
     private final static String LOG_TAG = PlantDetailsActivity.class.getSimpleName();
 
-    private ActionBar actionBar;
     private Plant plant;
     private GetPlantAsyncTask getPlantAsyncTask;
     private static final String PLANT_KEY = "plant_key";
@@ -43,8 +41,6 @@ public class PlantDetailsActivity extends Activity {
             plant = (Plant) savedInstanceState.getSerializable(PLANT_KEY);
             displayData(plant);
             initFragments(plant);
-        } else {
-            populatePlantData();
         }
     }
 
@@ -54,7 +50,28 @@ public class PlantDetailsActivity extends Activity {
         if(getPlantAsyncTask != null) {
             getPlantAsyncTask.cancel(true);
         }
+
+        if(activityState == null) {
+            activityState = new Bundle();
+        }
+
+        activityState.putSerializable(PLANT_KEY, plant);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(activityState != null) {
+            plant = (Plant) activityState.getSerializable(PLANT_KEY);
+            displayData(plant);
+            initFragments(plant);
+        }else {
+            populatePlantData();
+        }
+    }
+
+    Bundle activityState;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -71,9 +88,6 @@ public class PlantDetailsActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
             case R.id.menu_save:
                 startWriteTagActivity();
                 break;
@@ -127,7 +141,6 @@ public class PlantDetailsActivity extends Activity {
         } else {
             throw new RuntimeException("Intent data are empty, this should not happen.");
         }
-
     }
 
     private long getPlantIdFromNDEFMessage() {
@@ -139,7 +152,7 @@ public class PlantDetailsActivity extends Activity {
     }
 
     private void displayData(Plant plant) {
-        actionBar.setTitle(plant.getName());
+        getActionBar().setTitle(plant.getName());
     }
 
     private void initFragments(Plant plant) {
@@ -148,9 +161,6 @@ public class PlantDetailsActivity extends Activity {
     }
 
     private void initActionBar() {
-        actionBar = getActionBar();
-        if(actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
