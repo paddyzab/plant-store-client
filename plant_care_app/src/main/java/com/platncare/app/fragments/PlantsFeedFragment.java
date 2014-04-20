@@ -84,16 +84,32 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        resolveProgressBarVisibility();
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), PlantDetailsActivity.class);
         intent.putExtra(IntentKeys.PLANT_KEY, plantsAdapter.getItem(position));
         startActivity(intent);
     }
 
-
     public void requestPlantsArray() {
         showProgress(true);
         new GetPlantsListAsyncTask(executor).execute(stringToken);
+    }
+
+
+    private void resolveProgressBarVisibility() {
+        if (plantsAdapter != null) {
+            if (!plantsAdapter.isEmpty()) {
+                progressBarLoading.setVisibility(View.GONE);
+            } else {
+                progressBarLoading.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private GetPlantsListExecutor executor = new GetPlantsListExecutor() {

@@ -13,7 +13,6 @@ import com.platncare.app.utils.Preferences;
 
 public class FeedActivity extends Activity {
 
-
     private String token;
     private PlantsFeedFragment plantsFeedFragment;
 
@@ -23,7 +22,7 @@ public class FeedActivity extends Activity {
         setContentView(R.layout.activity_feed);
         getExtras();
 
-        attachInitialFragment();
+        initFragment();
     }
 
     @Override
@@ -69,10 +68,12 @@ public class FeedActivity extends Activity {
             } else {
                 token = Preferences.getAppToken(this);
             }
+        } else {
+            token = Preferences.getAppToken(this);
         }
     }
 
-    private void attachInitialFragment() {
+    private void initFragment() {
         plantsFeedFragment = PlantsFeedFragment.newInstance(token);
         FragmentUtils.setFragment(this, plantsFeedFragment, R.id.frameLayoutContainer);
     }

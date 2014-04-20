@@ -88,6 +88,9 @@ public class PlantDetailsActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
             case R.id.menu_save:
                 startWriteTagActivity();
                 break;
