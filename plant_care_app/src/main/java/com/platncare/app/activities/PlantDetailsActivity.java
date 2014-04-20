@@ -28,6 +28,8 @@ public class PlantDetailsActivity extends Activity {
 
     private Plant plant;
     private GetPlantAsyncTask getPlantAsyncTask;
+    private Bundle activityState;
+
     private static final String PLANT_KEY = "plant_key";
 
     @Override
@@ -70,8 +72,6 @@ public class PlantDetailsActivity extends Activity {
             populatePlantData();
         }
     }
-
-    Bundle activityState;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
