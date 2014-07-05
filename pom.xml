@@ -36,6 +36,12 @@
         <plant_store_sdk.version>0.0.8</plant_store_sdk.version>
         <android_validator.version>1.0</android_validator.version>
         <time_square.version>1.1.1</time_square.version>
+
+        <!-- Testing dependencies -->
+        <junit.version>4.11</junit.version>
+        <robolectric.version>2.3</robolectric.version>
+        <fest-android.version>1.0.8</fest-android.version>
+        <mockito.version>1.9.5</mockito.version>
     </properties>
 
     <dependencyManagement>
