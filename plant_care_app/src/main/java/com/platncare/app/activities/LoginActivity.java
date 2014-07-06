@@ -18,16 +18,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import client.model.Token;
 import com.platncare.app.R;
 import com.platncare.app.backend.RequestTokenAsyncTask;
 import com.platncare.app.backend.RequestTokenExecutor;
+import com.platncare.app.database.data_sources.PlantDAO;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
 import com.throrinstudio.android.common.libs.validator.Form;
 import com.throrinstudio.android.common.libs.validator.Validate;
 import com.throrinstudio.android.common.libs.validator.validator.EmailValidator;
 import com.throrinstudio.android.common.libs.validator.validator.NotEmptyValidator;
-import client.model.Token;
+import java.sql.SQLException;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
@@ -40,8 +42,10 @@ public class LoginActivity extends Activity implements OnClickListener {
     private Form validationForm;
     private Button buttonSignIn;
 
-    private static final String EMAILKEY = "EMAIL_KEY";
-    private static final String PASSWORDKEY = "PASSWORD_KEY";
+    private PlantDAO dataSource;
+
+    private static final String EMAIL_KEY = "EMAIL_KEY";
+    private static final String PASSWORD_KEY = "PASSWORD_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +54,23 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         setContentView(R.layout.activity_login);
         prepareActionBar();
+        initializeDatabase();
         initializeViews();
         initializeListeners();
         createValidationForm();
         retriveAndPopulateEditTexts(savedInstanceState);
+    }
+
+    private void initializeDatabase() {
+        dataSource = new PlantDAO(this);
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        dataSource.getAllPlants();
+
+        // TODO merge current data with the remote ones.
     }
 
     @Override
@@ -70,14 +87,14 @@ public class LoginActivity extends Activity implements OnClickListener {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(EMAILKEY, editTextEmail.getText().toString());
-        outState.putString(PASSWORDKEY, editTextPassword.getText().toString());
+        outState.putString(EMAIL_KEY, editTextEmail.getText().toString());
+        outState.putString(PASSWORD_KEY, editTextPassword.getText().toString());
     }
 
     private void retriveAndPopulateEditTexts(Bundle savedInstanceState) {
         if(savedInstanceState != null) {
-            editTextEmail.setText(savedInstanceState.getString(EMAILKEY));
-            editTextPassword.setText(savedInstanceState.getString(PASSWORDKEY));
+            editTextEmail.setText(savedInstanceState.getString(EMAIL_KEY));
+            editTextPassword.setText(savedInstanceState.getString(PASSWORD_KEY));
         }
     }
 
@@ -110,11 +127,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     protected void onPause() {
         super.onPause();
+        dataSource.close();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         overridePendingTransition(R.anim.up_in, R.anim.up_out);
         String stringToken = Preferences.getAppToken(LoginActivity.this);
 

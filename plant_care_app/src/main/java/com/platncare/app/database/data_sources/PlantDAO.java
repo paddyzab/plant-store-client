@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import client.model.Kind;
 import client.model.Plant;
 import client.model.Treatment;
+import com.google.common.collect.Lists;
 import com.platncare.app.database.SQLiteHelper;
 import java.sql.SQLException;
+import java.util.List;
 
 public class PlantDAO {
 
@@ -34,6 +36,7 @@ public class PlantDAO {
         ContentValues values = new ContentValues();
         values.put(SQLiteHelper.COLUMN_NAME, name);
         values.put(SQLiteHelper.COLUMN_DESCRIPTION, description);
+        values.put(SQLiteHelper.COLUMN_KIND, "test");
 
         long insertId = database.insert(SQLiteHelper.TABLE_PLANTS, null, values);
         Cursor cursor = database.query(SQLiteHelper.TABLE_PLANTS, allColumns, SQLiteHelper.COLUMN_ID + " = " + insertId, null,
@@ -43,6 +46,24 @@ public class PlantDAO {
         cursor.close();
 
         return newPlant;
+    }
+
+    public List<Plant> getAllPlants() {
+        List<Plant> plants = Lists.newArrayList();
+
+        Cursor cursor = database.query(SQLiteHelper.TABLE_PLANTS,
+                allColumns, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            Plant plant = cursorToPlant(cursor);
+            plants.add(plant);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return plants;
     }
 
     // TODO: use current Kind data, provide new DAO, and add relation.

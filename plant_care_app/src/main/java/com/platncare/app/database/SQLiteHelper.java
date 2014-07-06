@@ -21,7 +21,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     //Create Database SQL statement
     private static final String DATABASE_CREATE = "create table "
             + TABLE_PLANTS + "(" + COLUMN_ID
-            + "integer primary key autoincrement, " +
+            + " integer primary key autoincrement, " +
             COLUMN_NAME + " text not null, " +
             COLUMN_DESCRIPTION + " text not null, " +
             COLUMN_KIND + " text not null);";
@@ -37,8 +37,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-        Log.w(LOG_TAG, "Upgreading database from version: " + oldVersion + " to "
-            + newVersion + " which will destroy all the data!");
+        Log.w(LOG_TAG, "Upgrading database from version: " + oldVersion + " to "
+                + newVersion + " which will destroy all the data!");
         database.execSQL("DROP TABLE IF EXISTS " + DATABASE_CREATE);
         onCreate(database);
     }

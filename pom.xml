@@ -31,10 +31,6 @@
         <android.version>4.0.3_r3</android.version>
         <picasso.version>2.1.1</picasso.version>
         <plant_store_sdk.version>0.0.8</plant_store_sdk.version>
-        <sqlite-jdbc.version>3.7.15-M1</sqlite-jdbc.version>
-        <jooq.version>3.4.0</jooq.version>
-        <javax-annotation.version>1.2</javax-annotation.version>
-        <sqliteassethelper.version>2.0.1</sqliteassethelper.version>
     </properties>
 
     <dependencyManagement>

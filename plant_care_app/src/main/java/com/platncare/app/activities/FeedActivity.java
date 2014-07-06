@@ -6,16 +6,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.platncare.app.R;
+import com.platncare.app.database.data_sources.PlantDAO;
 import com.platncare.app.fragments.PlantsFeedFragment;
 import com.platncare.app.utils.FragmentUtils;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.utils.Preferences;
+import java.sql.SQLException;
 
 public class FeedActivity extends Activity {
 
 
     private String token;
     private PlantsFeedFragment plantsFeedFragment;
+    private PlantDAO dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,30 @@ public class FeedActivity extends Activity {
         setContentView(R.layout.activity_feed);
         getExtras();
 
+        dataSource = new PlantDAO(this);
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         attachInitialFragment();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dataSource.close();
     }
 
     @Override
@@ -50,9 +76,12 @@ public class FeedActivity extends Activity {
     }
 
     private void refreshPlantsList() {
-        if (plantsFeedFragment != null) {
-            plantsFeedFragment.requestPlantsArray();
-        }
+//        if (plantsFeedFragment != null) {
+//            plantsFeedFragment.requestPlantsArray();
+//        }
+
+        dataSource.createPlant("Test", "Testing");
+
     }
 
     private void startLogout() {
