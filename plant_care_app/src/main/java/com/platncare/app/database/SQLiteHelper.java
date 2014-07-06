@@ -9,7 +9,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = SQLiteHelper.class.getSimpleName();
 
-    public static final String TABLE_PLANTS_NAMES = "plants";
+    public static final String TABLE_PLANTS = "plants";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_DESCRIPTION = "description";
@@ -20,7 +20,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     //Create Database SQL statement
     private static final String DATABASE_CREATE = "create table "
-            + TABLE_PLANTS_NAMES + "(" + COLUMN_ID
+            + TABLE_PLANTS + "(" + COLUMN_ID
             + "integer primary key autoincrement, " +
             COLUMN_NAME + " text not null, " +
             COLUMN_DESCRIPTION + " text not null, " +
