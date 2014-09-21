@@ -21,7 +21,19 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_KIND_ID = "_id";
     public static final String COLUMN_KIND_NAME = "name";
     public static final String COLUMN_KIND_LATIN_NAME = "latin_name";
-    public static final String COLUMN_KIND_TREATMENT_ID = "treatment";
+
+    public static final String COLUMN_WATERING_SEASON = "watering_season";
+    public static final String COLUMN_WATERING_REST = "watering_rest";
+    public static final String COLUMN_DRY_WATERING_SEASON = "dry_between_watering_season";
+    public static final String COLUMN_DRY_WATERING_REST = "dry_between_watering_rest";
+    public static final String COLUMN_INSOLATION = "insolation";
+    public static final String COLUMN_SEASON_TEMP_MIN = "season_temp_min";
+    public static final String COLUMN_SEASON_TEMP_MAX = "season_temp_max";
+    public static final String COLUMN_REST_TEMP_MIN = "rest_temp_min";
+    public static final String COLUMN_REST_TEMP_MAX = "rest_temp_max";
+    public static final String COLUMN_HUMIDITY = "humidity";
+    public static final String COLUMN_COMMENT = "comment";
+
     // TODO: add Treatment columns to Kind Table
 
     private static final int DATABASE_VERSION = 1;
@@ -37,10 +49,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             + TABLE_KINDS + "(" + COLUMN_KIND_ID
             + " integer primary key, " +
             COLUMN_KIND_NAME + " text not null, " +
-            COLUMN_KIND_LATIN_NAME + " text not null, " +
-            COLUMN_KIND_TREATMENT_ID + " integer not null);";
-
-
+            COLUMN_KIND_LATIN_NAME + " text, " +
+            COLUMN_WATERING_SEASON + " text not null, " +
+            COLUMN_WATERING_REST + " text not null, " +
+            COLUMN_DRY_WATERING_SEASON + " integer, " +
+            COLUMN_DRY_WATERING_REST + " integer, " +
+            COLUMN_INSOLATION + " text not null, " +
+            COLUMN_SEASON_TEMP_MIN + " integer not null, " +
+            COLUMN_SEASON_TEMP_MAX + " integer not null, " +
+            COLUMN_REST_TEMP_MIN + " integer not null, " +
+            COLUMN_REST_TEMP_MAX + " integer not null, " +
+            COLUMN_HUMIDITY + " text not null, " +
+            COLUMN_COMMENT + " text );";
 
     public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

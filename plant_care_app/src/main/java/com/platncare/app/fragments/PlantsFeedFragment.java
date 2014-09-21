@@ -12,12 +12,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import client.model.Kind;
 import client.model.Plant;
+import client.model.Treatment;
 import com.platncare.app.R;
 import com.platncare.app.activities.PlantDetailsActivity;
 import com.platncare.app.adapters.PlantAdapter;
 import com.platncare.app.backend.GetPlantsListAsyncTask;
 import com.platncare.app.backend.GetPlantsListExecutor;
+import com.platncare.app.database.data_sources.KindDAO;
 import com.platncare.app.database.data_sources.PlantDAO;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.views.EndlessGridView;
@@ -34,6 +37,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     private Context context;
 
     private PlantDAO plantStorage;
+    private KindDAO kindStorage;
 
     //TODO move this item to the EndlessGridView
     private ProgressBar progressBarLoading;
@@ -84,6 +88,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         context = getActivity();
 
         plantStorage = new PlantDAO(context);
+        kindStorage = new KindDAO(context);
 
         setRetainInstance(true);
     }
@@ -109,15 +114,35 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
 
             try {
                 plantStorage.open();
+                kindStorage.open();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
             for (Plant plant : plants) {
+
+                Kind kind = plant.getKind();
+                Treatment treatment = kind.getTreatment();
+
+                kindStorage.createKind(kind.getId(),
+                        kind.getName(),
+                        kind.getLatinName(),
+                        treatment.getWateringSeason(),
+                        treatment.getWateringRest(),
+                        treatment.getInsolation(),
+                        treatment.getSeasonTempMin(),
+                        treatment.getSeasonTempMax(),
+                        treatment.getRestTempMin(),
+                        treatment.getRestTempMax(),
+                        treatment.getHumidity(),
+                        treatment.getComment());
+
                 plantStorage.createPlant(plant.getName(),
                         plant.getDescription(),
                         plant.getKind().getId());
             }
+
+            kindStorage.getAllKinds();
 
             plantsAdapter = new PlantAdapter(context, plantStorage.getAllPlants());
             endlessGridViewPlants.setAdapter(plantsAdapter);
