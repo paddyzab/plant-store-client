@@ -22,6 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_KIND_NAME = "name";
     public static final String COLUMN_KIND_LATIN_NAME = "latin_name";
     public static final String COLUMN_KIND_TREATMENT_ID = "treatment";
+    // TODO: add Treatment columns to Kind Table
 
     private static final int DATABASE_VERSION = 1;
 

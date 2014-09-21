@@ -70,7 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
         dataSource.getAllPlants();
         // TODO request all plants from the backend and merge them with the local storage.
-
+        // TODO request and consume Kind data as well, rest of the app will be able to run in offline from now.
 
     }
 

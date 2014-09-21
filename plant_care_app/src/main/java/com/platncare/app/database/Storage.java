@@ -10,6 +10,8 @@ public class Storage {
     // createPlant
     // getPlantById
 
+    //TODO: expose convinience method for working with the storage
+
     public Storage(Context context) {
         plants = new PlantDAO(context);
     }
