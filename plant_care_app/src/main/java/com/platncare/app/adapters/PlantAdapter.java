@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.platncare.app.R;
 import client.model.Plant;
-
+import com.platncare.app.R;
 import com.platncare.app.backend.models.Humidity;
 import com.platncare.app.backend.models.Insolation;
 import com.platncare.app.backend.models.Watering;
-import java.util.ArrayList;
+import java.util.List;
 
 public class PlantAdapter extends ArrayAdapter<Plant> {
 
     Context context;
 
-    public PlantAdapter(Context context, ArrayList<Plant> plants) {
+    public PlantAdapter(Context context, List<Plant> plants) {
         super(context, R.layout.adapter_plant, plants);
         this.context = context;
     }
@@ -29,7 +28,7 @@ public class PlantAdapter extends ArrayAdapter<Plant> {
 
         View rowView = convertView;
 
-        if(rowView == null) {
+        if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.adapter_plant, parent, false);
 

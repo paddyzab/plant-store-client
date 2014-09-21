@@ -8,19 +8,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import client.model.Plant;
 import com.platncare.app.R;
 import com.platncare.app.activities.PlantDetailsActivity;
 import com.platncare.app.adapters.PlantAdapter;
 import com.platncare.app.backend.GetPlantsListAsyncTask;
 import com.platncare.app.backend.GetPlantsListExecutor;
+import com.platncare.app.database.data_sources.PlantDAO;
 import com.platncare.app.utils.IntentKeys;
 import com.platncare.app.views.EndlessGridView;
-import client.model.Plant;
-
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PlantsFeedFragment extends Fragment implements OnItemClickListener {
@@ -31,6 +32,8 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     private PlantAdapter plantsAdapter;
     private String stringToken;
     private Context context;
+
+    private PlantDAO plantStorage;
 
     //TODO move this item to the EndlessGridView
     private ProgressBar progressBarLoading;
@@ -62,8 +65,8 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     public void onStart() {
         super.onStart();
 
-        if(plantsAdapter != null) {
-            if(plantsAdapter.isEmpty()) {
+        if (plantsAdapter != null) {
+            if (plantsAdapter.isEmpty()) {
                 endlessGridViewPlants.setAdapter(plantsAdapter);
                 requestPlantsArray();
             } else {
@@ -79,6 +82,8 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+
+        plantStorage = new PlantDAO(context);
 
         setRetainInstance(true);
     }
@@ -101,7 +106,20 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
         @Override
         public void onSuccess(ArrayList<Plant> plants) {
             showProgress(false);
-            plantsAdapter = new PlantAdapter(context, plants);
+
+            try {
+                plantStorage.open();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            for (Plant plant : plants) {
+                plantStorage.createPlant(plant.getName(),
+                        plant.getDescription(),
+                        plant.getKind().getId());
+            }
+
+            plantsAdapter = new PlantAdapter(context, plantStorage.getAllPlants());
             endlessGridViewPlants.setAdapter(plantsAdapter);
             progressBarLoading.setVisibility(View.GONE);
         }
@@ -129,7 +147,7 @@ public class PlantsFeedFragment extends Fragment implements OnItemClickListener 
     }
 
     private void clearAdapter() {
-        if(plantsAdapter != null) {
+        if (plantsAdapter != null) {
             plantsAdapter.clear();
         }
     }

@@ -62,7 +62,7 @@ public class FeedActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                startLogout();
                 break;
             case R.id.menu_refresh:
                 refreshPlantsList();
@@ -76,12 +76,9 @@ public class FeedActivity extends Activity {
     }
 
     private void refreshPlantsList() {
-//        if (plantsFeedFragment != null) {
-//            plantsFeedFragment.requestPlantsArray();
-//        }
-
-        dataSource.createPlant("Test", "Testing");
-
+        if (plantsFeedFragment != null) {
+            plantsFeedFragment.requestPlantsArray();
+        }
     }
 
     private void startLogout() {

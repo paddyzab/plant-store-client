@@ -16,8 +16,8 @@ public class PlantDAO {
 
     private SQLiteDatabase database;
     private SQLiteHelper helper;
-    private String[] allColumns = {SQLiteHelper.COLUMN_ID,
-            SQLiteHelper.COLUMN_NAME, SQLiteHelper.COLUMN_DESCRIPTION, SQLiteHelper.COLUMN_KIND};
+    private String[] allColumns = {SQLiteHelper.COLUMN_PLANT_ID,
+            SQLiteHelper.COLUMN_PLANT_NAME, SQLiteHelper.COLUMN_PLANT_DESCRIPTION, SQLiteHelper.COLUMN_PLANT_KIND_ID};
 
     public PlantDAO(Context context) {
         helper = new SQLiteHelper(context);
@@ -32,14 +32,15 @@ public class PlantDAO {
     }
 
     public Plant createPlant(String name,
-                             String description) {
+                             String description,
+                             Long kindId) {
         ContentValues values = new ContentValues();
-        values.put(SQLiteHelper.COLUMN_NAME, name);
-        values.put(SQLiteHelper.COLUMN_DESCRIPTION, description);
-        values.put(SQLiteHelper.COLUMN_KIND, "test");
+        values.put(SQLiteHelper.COLUMN_PLANT_NAME, name);
+        values.put(SQLiteHelper.COLUMN_PLANT_DESCRIPTION, description);
+        values.put(SQLiteHelper.COLUMN_PLANT_KIND_ID, kindId);
 
         long insertId = database.insert(SQLiteHelper.TABLE_PLANTS, null, values);
-        Cursor cursor = database.query(SQLiteHelper.TABLE_PLANTS, allColumns, SQLiteHelper.COLUMN_ID + " = " + insertId, null,
+        Cursor cursor = database.query(SQLiteHelper.TABLE_PLANTS, allColumns, SQLiteHelper.COLUMN_PLANT_ID + " = " + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
         Plant newPlant = cursorToPlant(cursor);
@@ -66,7 +67,9 @@ public class PlantDAO {
         return plants;
     }
 
-    // TODO: use current Kind data, provide new DAO, and add relation.
+    public Plant getPlantById(String id) {
+        return null;
+    }
 
     private Plant cursorToPlant(Cursor cursor) {
         Plant plant = new Plant();

@@ -69,8 +69,9 @@ public class LoginActivity extends Activity implements OnClickListener {
             e.printStackTrace();
         }
         dataSource.getAllPlants();
+        // TODO request all plants from the backend and merge them with the local storage.
 
-        // TODO merge current data with the remote ones.
+
     }
 
     @Override
@@ -92,7 +93,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     }
 
     private void retriveAndPopulateEditTexts(Bundle savedInstanceState) {
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             editTextEmail.setText(savedInstanceState.getString(EMAIL_KEY));
             editTextPassword.setText(savedInstanceState.getString(PASSWORD_KEY));
         }
@@ -142,23 +143,18 @@ public class LoginActivity extends Activity implements OnClickListener {
         String stringToken = Preferences.getAppToken(LoginActivity.this);
 
         //When we have token persisted just start FeedActivity
-        if(stringToken != null && !TextUtils.isEmpty(stringToken)) {
+        if (stringToken != null && !TextUtils.isEmpty(stringToken)) {
             this.stringToken = stringToken;
             startFeedActivity();
         }
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login validationForm.
-     * If there are validationForm errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     public void attemptLogin() {
 
         editTextEmail.setError(null);
         editTextPassword.setError(null);
 
-        if(validationForm.validate()) {
+        if (validationForm.validate()) {
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
 
@@ -195,9 +191,6 @@ public class LoginActivity extends Activity implements OnClickListener {
     };
 
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -223,8 +216,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                         }
                     });
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
             linearLayoutLoginStatus.setVisibility(show ? View.VISIBLE : View.GONE);
             relativeLayoutLoginForm.setVisibility(show ? View.GONE : View.VISIBLE);
         }
@@ -243,18 +234,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     private void prepareActionBar() {
         ActionBar actionBar = getActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.hide();
         }
     }
 
     private void startFeedActivity() {
-        //Start FeedActivity after successful Login
         Intent intent = new Intent(LoginActivity.this, FeedActivity.class);
         intent.putExtra(IntentKeys.TOKEN_KEY, stringToken);
         startActivity(intent);
 
-        //Destroy this activity to remove it from the activity stack
         LoginActivity.this.finish();
     }
 }
